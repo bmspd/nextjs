@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const $api = axios.create({
-  baseURL: 'http://localhost:3000/api',
+  baseURL: process.env.NEXT_PUBLIC_BACKEND_BASEURL,
 })
 
 $api.defaults.withCredentials = true
@@ -17,11 +17,14 @@ $api.interceptors.response.use(
     if (error.response.status === 401 && localStorage.getItem('refreshToken')) {
       let apiResponse
       try {
-        apiResponse = await axios.get('http://localhost:3000/auth/refresh', {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('refreshToken')}`,
-          },
-        })
+        apiResponse = await axios.get(
+          `${process.env.NEXT_PUBLIC_BACKEND_BASEURL}/auth/refresh`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('refreshToken')}`,
+            },
+          }
+        )
       } catch (e) {
         /*avoid multiply refresh-token requests*/
         localStorage.removeItem('refreshToken')

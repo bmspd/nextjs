@@ -1,10 +1,12 @@
 'use client'
 
-import React from 'react'
+import React, { useEffect } from 'react'
 import styles from './Login.module.scss'
 import { Button, TextField } from '@mui/material'
 import { useTypedDispatch } from '../../hooks/typedStoreHooks'
 import { login } from '../../store/reducers/AuthSlice/asyncThunks'
+import $api from '../../http'
+import AuthService from '../../http/services/AuthService'
 
 const Login = () => {
   const dispatch = useTypedDispatch()
@@ -15,7 +17,9 @@ const Login = () => {
       <Button
         variant="contained"
         onClick={() =>
-          dispatch(login({ name: 'second@email.ru', password: 'asdasdasd' }))
+          dispatch(
+            login({ username: 'second@email.ru', password: 'asdasdasd' })
+          )
         }
       >
         Log in

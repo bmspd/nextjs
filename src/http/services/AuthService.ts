@@ -2,7 +2,7 @@ import $api from '../index'
 import { AxiosResponse } from 'axios'
 
 export type LoginRequestBody = {
-  name: string
+  username: string
   password: string
 }
 
