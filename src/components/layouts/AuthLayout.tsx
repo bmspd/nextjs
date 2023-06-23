@@ -8,7 +8,7 @@ import { usePathname } from 'next/navigation'
 const AuthLayout = ({ children }: { children: React.ReactNode }) => {
   const isAuth = useSelector(selectIsAuth)
   const pathname = usePathname()
-  if (!isAuth && pathname !== '/') return <>Log in first!</>
+  if (!isAuth && pathname !== '/' && pathname !== '/sign-up') return <>Log in first!</>
 
   return <>{children}</>
 }

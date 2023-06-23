@@ -1,7 +1,7 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
-import { Switch, Typography, Button } from '@mui/material'
+import React from 'react'
+import { Button } from '@mui/material'
 import { selectIsAuth } from '../store/reducers/AuthSlice/selectors'
 import { setAuthState } from '../store/reducers/AuthSlice/AuthSlice'
 import { useTypedDispatch, useTypedSelector } from '../hooks/typedStoreHooks'
@@ -12,11 +12,10 @@ export default function Home() {
   const dispatch = useTypedDispatch()
   return (
     <div className="container">
-      <Login></Login>
-      <h1 onClick={() => dispatch(setAuthState(!isAuth))}>
-        {isAuth.toString()}
-      </h1>
-      <Link href="/logged">
+      <Login />
+      <Link href="sign-up">Sign up</Link>
+      <h1 onClick={() => dispatch(setAuthState(!isAuth))}>{isAuth.toString()}</h1>
+      <Link href="logged">
         <Button variant={'contained'}>Click</Button>
       </Link>
     </div>

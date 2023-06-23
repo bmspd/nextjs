@@ -1,6 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { HYDRATE } from 'next-redux-wrapper'
-import { login } from './asyncThunks'
+import { login, signUp } from './asyncThunks'
 
 type InitialAuthState = {
   isAuth: boolean
@@ -27,6 +26,12 @@ const AuthSlice = createSlice({
       })
       .addCase(login.rejected, () => {
         console.log('REJECTED!')
+      })
+      .addCase(signUp.fulfilled, () => {
+        console.log('FULLFILLED')
+      })
+      .addCase(signUp.rejected, (state, action) => {
+        console.log('rejected', action)
       }),
 })
 export const { setAuthState } = AuthSlice.actions

@@ -1,6 +1,8 @@
+@import '_variables.scss';
 
 body {
   min-height: 100vh;
+  overflow-x: hidden;
 }
 main {
   height: 100%;

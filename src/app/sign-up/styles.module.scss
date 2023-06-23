@@ -1,0 +1,17 @@
+@import '../../styles/variables';
+.pageContainer {
+  padding-top: 50px;
+}
+
+.signUpContainer {
+  margin: 0 auto;
+  width: 500px;
+  height: auto;
+  border: 1px solid black;
+  padding: 20px;
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: $step * 3;
+  }
+}
