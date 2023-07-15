@@ -1,6 +1,6 @@
 module.exports = {
   // this will check Typescript files
-  'src/**/*.(ts|tsx)': () => 'tsc --noEmit',
+  '**/*.(ts|tsx)': () => 'tsc -p tsconfig.json --noEmit',
 
   // This will lint and format TypeScript and JavaScript files
   '**/*.(ts|tsx|js)': (filenames) => [

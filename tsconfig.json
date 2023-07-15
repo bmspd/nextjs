@@ -19,10 +19,12 @@
         "name": "next"
       }
     ],
+    "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules"]
+  // не уверен, что должно быть так, но это игнорит ошибки в этих папках при lint-staged
+  "exclude": ["node_modules", ".next"]
 }
