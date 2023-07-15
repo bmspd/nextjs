@@ -1,15 +1,25 @@
 'use client'
 
-import React from 'react'
-import { useSelector } from 'react-redux'
+import React, { useEffect, useState } from 'react'
 import { selectIsAuth } from '../../store/reducers/AuthSlice/selectors'
 import { usePathname } from 'next/navigation'
+import { useTypedDispatch, useTypedSelector } from '../../hooks/typedStoreHooks'
+import { loginByToken } from '../../store/reducers/AuthSlice/asyncThunks'
+import DefaultLoader from '../Loaders/DefaultLoader'
+import LoginView from '../LoginView/LoginView'
 
 const AuthLayout = ({ children }: { children: React.ReactNode }) => {
-  const isAuth = useSelector(selectIsAuth)
+  const isAuth = useTypedSelector(selectIsAuth)
+  const dispatch = useTypedDispatch()
   const pathname = usePathname()
-  if (!isAuth && pathname !== '/' && pathname !== '/sign-up') return <>Log in first!</>
+  const [loading, setLoading] = useState<boolean>(true)
+  useEffect(() => {
+    // todo какой-то хук для лоадинга...
+    dispatch(loginByToken()).then(() => setLoading(false))
+  }, [])
 
+  if (loading) return <DefaultLoader />
+  if (!isAuth && pathname !== '/sign-up') return <LoginView />
   return <>{children}</>
 }
 

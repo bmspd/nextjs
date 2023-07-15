@@ -1,11 +1,13 @@
 import { Action, configureStore, ThunkAction } from '@reduxjs/toolkit'
 import AuthSlice from './reducers/AuthSlice/AuthSlice'
 import NotificationsSlice from './reducers/NotificationsSlice/NotificationsSlice'
+import ProfileSlice from './reducers/ProfileSlice/ProfileSlice'
 
 export const store = configureStore({
   reducer: {
     auth: AuthSlice,
     notifications: NotificationsSlice,
+    profile: ProfileSlice,
   },
 })
 

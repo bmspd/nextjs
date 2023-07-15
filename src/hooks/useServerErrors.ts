@@ -16,7 +16,8 @@ export function useServerErrors<TFieldValues extends FieldValues>(
       let message = ''
       if (Array.isArray(value)) message = value.join('. ')
       else message = value
-      setError(key, { message })
+      if (key === 'server-error') setError('root.serverError', { message })
+      else setError(key, { message })
     })
   }
   return setServerErrors

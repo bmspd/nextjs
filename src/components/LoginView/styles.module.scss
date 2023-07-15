@@ -1,0 +1,11 @@
+@import '../../styles/variables';
+.logInContainer {
+  margin: 0 auto;
+  padding: 50px;
+  width: 700px;
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: $step * 3;
+  }
+}

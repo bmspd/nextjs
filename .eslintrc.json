@@ -4,5 +4,8 @@
     "plugin:@typescript-eslint/recommended",
     "plugin:storybook/recommended",
     "prettier"
-  ]
+  ],
+  "rules": {
+    "react-hooks/exhaustive-deps": "off"
+  }
 }

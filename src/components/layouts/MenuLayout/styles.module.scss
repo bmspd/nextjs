@@ -1,0 +1,18 @@
+@import '../../../styles/variables';
+
+.menuHeader {
+  height: 80px;
+  background-color: lightpink;
+  width: 100%;
+  padding: $step * 3;
+
+  > div {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+
+.headerProfile {
+
+}

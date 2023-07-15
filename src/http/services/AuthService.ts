@@ -16,6 +16,9 @@ export default class AuthService {
   static async login(data: LoginRequestBody): Promise<AxiosResponse> {
     return $api.post<AxiosResponse>('/auth/login', data)
   }
+  static async loginByToken(): Promise<AxiosResponse> {
+    return $api.get<AxiosResponse>('/auth/login')
+  }
   static async signUp(data: SignUpRequestBody) {
     return $api.post<AxiosResponse>('/auth/signup', data)
   }

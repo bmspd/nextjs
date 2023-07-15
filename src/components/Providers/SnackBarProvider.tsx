@@ -13,7 +13,7 @@ const SnackBarProvider = ({ children }: { children: React.ReactNode }) => {
     <SnackbarProvider
       Components={SNACKBAR_COMPONENTS}
       disableWindowBlurListener={true}
-      autoHideDuration={null}
+      autoHideDuration={4000}
     >
       <UseNotifierHookLayout />
       {children}
