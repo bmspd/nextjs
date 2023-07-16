@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import styles from './styles.module.scss'
 import { Avatar } from '@mui/material'
 import DropDown from '../../DropDown'
+import { signOut } from 'next-auth/react'
 
 const MenuHeader = () => {
   const promiseFoo = async () => {
@@ -24,8 +25,8 @@ const MenuHeader = () => {
             options={[
               { element: 'First', onClickHandler: promiseFoo, onEndClose: true },
               {
-                element: 'Second',
-                onClickHandler: promiseFoo,
+                element: 'Log out',
+                onClickHandler: async () => signOut({ redirect: false }),
                 onEndClose: false,
               },
             ]}

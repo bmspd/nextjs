@@ -1,25 +1,28 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
-import { selectIsAuth } from '../../store/reducers/AuthSlice/selectors'
-import { usePathname } from 'next/navigation'
-import { useTypedDispatch, useTypedSelector } from '../../hooks/typedStoreHooks'
-import { loginByToken } from '../../store/reducers/AuthSlice/asyncThunks'
+import { useTypedDispatch } from '@/hooks/typedStoreHooks'
 import DefaultLoader from '../Loaders/DefaultLoader'
 import LoginView from '../LoginView/LoginView'
+import { useSession } from 'next-auth/react'
+import { setAuthState } from '@/store/reducers/AuthSlice/AuthSlice'
+import { setProfile } from '@/store/reducers/ProfileSlice/ProfileSlice'
 
 const AuthLayout = ({ children }: { children: React.ReactNode }) => {
-  const isAuth = useTypedSelector(selectIsAuth)
   const dispatch = useTypedDispatch()
-  const pathname = usePathname()
-  const [loading, setLoading] = useState<boolean>(true)
+  const session = useSession()
   useEffect(() => {
-    // todo какой-то хук для лоадинга...
-    dispatch(loginByToken()).then(() => setLoading(false))
-  }, [])
+    if (session.status === 'authenticated') {
+      const { tokens, ...rest } = session.data
+      dispatch(setAuthState(true))
+      dispatch(setProfile(rest))
+      localStorage.setItem('accessToken', tokens.accessToken)
+      localStorage.setItem('refreshToken', tokens.refreshToken)
+    }
+  }, [session])
 
-  if (loading) return <DefaultLoader />
-  if (!isAuth && pathname !== '/sign-up') return <LoginView />
+  if (session.status === 'loading') return <DefaultLoader />
+  if (session.status === 'unauthenticated') return <LoginView />
   return <>{children}</>
 }
 

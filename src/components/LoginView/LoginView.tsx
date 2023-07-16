@@ -1,8 +1,5 @@
 import React from 'react'
-import { useServerErrors } from '../../hooks/useServerErrors'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
-import { login } from '../../store/reducers/AuthSlice/asyncThunks'
-import { useTypedDispatch } from '../../hooks/typedStoreHooks'
 import styles from './styles.module.scss'
 import DefaultTextField from '../Inputs/DefaultTextField/DefaultTextField'
 import PasswordTextField from '../Inputs/PasswordTextField/PasswordTextField'
@@ -10,7 +7,8 @@ import { Button } from '@mui/material'
 import DefaultAlert from '../Alerts/DefaultAlert'
 import Link from 'next/link'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { logInSchema } from '../../validation/login.validation'
+import { logInSchema } from '@/validation/login.validation'
+import { signIn } from 'next-auth/react'
 
 interface ILogInForm {
   username: string
@@ -27,14 +25,16 @@ const LoginView = () => {
     defaultValues: { username: '', password: '' },
     resolver: yupResolver(logInSchema),
   })
-  const setServerErrors = useServerErrors<ILogInForm>(setError)
   const onSubmit: SubmitHandler<ILogInForm> = async (data) => {
-    await dispatch(login(data)).then(setServerErrors)
+    const res = await signIn('credentials', { ...data, redirect: false })
+    if (res?.error) setError('root.serverError', { message: res.error })
   }
-  const dispatch = useTypedDispatch()
   return (
     <div className={styles.logInContainer}>
       <form onSubmit={handleSubmit(onSubmit)}>
+        <Button variant="contained" onClick={() => signIn('google', { redirect: false })}>
+          GOOGLE BUTTON
+        </Button>
         <Controller
           name="username"
           control={control}

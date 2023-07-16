@@ -8,6 +8,7 @@ export function useServerErrors<TFieldValues extends FieldValues>(
   setError: UseFormSetError<TFieldValues>
 ) {
   const setServerErrors = (action: PayloadAction<any>) => {
+    console.log(action)
     if (!endsWith(action.type, 'rejected')) return action
     const payload = action.payload as ServerErrorResponse<TFieldValues>
     const errors = payload.data.errors

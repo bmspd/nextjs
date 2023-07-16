@@ -18,14 +18,14 @@ export const signUpSchema = yup.object({
   first_name: yup
     .string()
     .notRequired()
-    .min(DEFAULT_MINIMUM_CHAR_LENGTH)
+    .min(2)
     .max(DEFAULT_MAXIMUM_CHAR_LENGTH)
     .nullable()
     .transform((value) => (!!value ? value : null)),
   second_name: yup
     .string()
     .notRequired()
-    .min(DEFAULT_MINIMUM_CHAR_LENGTH)
+    .min(2)
     .max(DEFAULT_MAXIMUM_CHAR_LENGTH)
     .nullable()
     .transform((value) => (!!value ? value : null)),
