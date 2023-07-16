@@ -1,11 +1,10 @@
 'use client'
 
-import React, { useEffect, useRef, useState } from 'react'
+import React from 'react'
 import styles from './styles.module.scss'
 import { Avatar } from '@mui/material'
 import DropDown from '../../DropDown'
 import { signOut } from 'next-auth/react'
-
 const MenuHeader = () => {
   const promiseFoo = async () => {
     return new Promise((resolve) => {
