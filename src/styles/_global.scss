@@ -10,5 +10,5 @@ body {
 main {
   background-color: #ddd;
   flex-grow: 1;
-  padding: $default-padding $main-side-padding;
+  padding: $default-padding $main-side-padding $default-padding 0;
 }

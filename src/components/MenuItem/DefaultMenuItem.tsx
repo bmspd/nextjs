@@ -1,6 +1,5 @@
 import React from 'react'
 import {
-  ListItem,
   ListItemIcon,
   ListItemText,
   ListItemTextProps,
@@ -14,15 +13,13 @@ interface DefaultMenuItemProps extends Omit<MenuItemProps, 'children'> {
 }
 
 const DefaultMenuItem = React.forwardRef<HTMLLIElement, DefaultMenuItemProps>((props, ref) => {
-  const { ListItemTextProps } = props
+  const { ListItemTextProps, ...rest } = props
   return (
-    <MenuItem ref={ref} {...props}>
-      <ListItem disablePadding>
-        <ListItemIcon>
-          <AccountCircleIcon fontSize="medium" />
-        </ListItemIcon>
-        <ListItemText {...ListItemTextProps} />
-      </ListItem>
+    <MenuItem ref={ref} {...rest}>
+      <ListItemIcon>
+        <AccountCircleIcon fontSize="medium" />
+      </ListItemIcon>
+      <ListItemText {...ListItemTextProps} />
     </MenuItem>
   )
 })

@@ -9,9 +9,10 @@ import {
   MenuItem,
   MenuList,
   Paper,
+  PaperProps,
   Popper,
 } from '@mui/material'
-import { uniqueId } from 'lodash'
+import { merge, uniqueId } from 'lodash'
 import { PopperPlacementType } from '@mui/base/Popper/Popper.types'
 import { Z_INDEX } from '@/constants/global.constants'
 import NextLink from 'next/link'
@@ -27,12 +28,14 @@ type DropDownProps = {
   control: React.ReactElement | string
   options: DropDownOption[]
   popperPlacement?: PopperPlacementType
+  PaperProps?: PaperProps
 }
 
 const DropDown: React.FC<DropDownProps> = ({
   control,
   options,
   popperPlacement = 'bottom-end',
+  PaperProps,
 }) => {
   const [open, setOpen] = useState<boolean>(false)
   const anchorRef = useRef<HTMLButtonElement>(null)
@@ -87,7 +90,7 @@ const DropDown: React.FC<DropDownProps> = ({
       >
         {({ TransitionProps }) => (
           <Grow {...TransitionProps}>
-            <Paper sx={{ minWidth: 150 }}>
+            <Paper elevation={6} {...merge({ sx: { minWidth: 150 } }, PaperProps)}>
               <ClickAwayListener onClickAway={handleClose}>
                 <MenuList
                   autoFocusItem={open}

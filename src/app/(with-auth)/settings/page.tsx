@@ -1,10 +1,10 @@
 import React from 'react'
+import MainBlock from '@/components/Blocks/MainBlock'
 
 export default function Home() {
   return (
     <div>
-      I AM SETTINGS PAGE
-      <br />
+      <MainBlock>I AM SETTINGS PAGE</MainBlock>
     </div>
   )
 }

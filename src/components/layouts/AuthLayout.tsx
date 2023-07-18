@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { useTypedDispatch } from '@/hooks/typedStoreHooks'
 import DefaultLoader from '../Loaders/DefaultLoader'
 import LoginView from '../LoginView/LoginView'
@@ -12,6 +12,7 @@ const AuthLayout = ({ children }: { children: React.ReactNode }) => {
   const dispatch = useTypedDispatch()
   const session = useSession()
   useEffect(() => {
+    console.log(session)
     if (session.status === 'authenticated') {
       const { tokens, ...rest } = session.data
       dispatch(setAuthState(true))
