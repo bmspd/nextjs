@@ -1,11 +1,18 @@
 @import '../../../styles/variables';
 
 .menuHeader {
-  height: 80px;
+  position: sticky;
+  top: 0;
+  height: $header-height;
   background-color: lightpink;
   width: 100%;
-  padding: $step * 3;
-
+  &Content {
+    margin: 0 auto;
+    width: 100%;
+    height: 100%;
+    max-width: $content-max-width;
+    padding: $step * 3 $main-side-padding;
+  }
   > div {
     display: flex;
     justify-content: space-between;
@@ -15,4 +22,19 @@
 
 .headerProfile {
 
+}
+.menuAndMain {
+  height: calc(100% - #{$header-height});
+  min-height: calc(100vh - #{$header-height});
+  width: 100%;
+  max-width: $content-max-width;
+  position: relative;
+  display: flex;
+  margin: 0 auto;
+}
+.menuBar {
+  padding: $default-padding $main-side-padding;
+  width: 250px;
+  flex-shrink: 0;
+  background-color: #ddd;
 }

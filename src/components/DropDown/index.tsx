@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import styles from './styles.module.scss'
 import {
   ClickAwayListener,
+  Divider,
   Grow,
   IconButton,
   MenuItem,
@@ -12,11 +13,15 @@ import {
 } from '@mui/material'
 import { uniqueId } from 'lodash'
 import { PopperPlacementType } from '@mui/base/Popper/Popper.types'
+import { Z_INDEX } from '@/constants/global.constants'
+import NextLink from 'next/link'
 
-type DropDownOption = {
-  element: React.ReactElement | string
+export type DropDownOption = {
+  element?: React.ReactElement | string
   onClickHandler?: () => void
   onEndClose?: boolean
+  divider?: boolean
+  href?: string
 }
 type DropDownProps = {
   control: React.ReactElement | string
@@ -78,10 +83,11 @@ const DropDown: React.FC<DropDownProps> = ({
         placement={popperPlacement}
         transition
         disablePortal
+        style={{ zIndex: Z_INDEX.POPPER }}
       >
-        {({ TransitionProps, placement }) => (
+        {({ TransitionProps }) => (
           <Grow {...TransitionProps}>
-            <Paper>
+            <Paper sx={{ minWidth: 150 }}>
               <ClickAwayListener onClickAway={handleClose}>
                 <MenuList
                   autoFocusItem={open}
@@ -89,17 +95,24 @@ const DropDown: React.FC<DropDownProps> = ({
                   aria-labelledby="composition-button"
                   onKeyDown={handleListKeyDown}
                 >
-                  {options.map(({ element, onClickHandler, onEndClose }) => (
-                    <MenuItem
-                      onClick={async (event: Event | React.SyntheticEvent) => {
-                        if (onClickHandler) await onClickHandler()
-                        if (onEndClose) handleClose(event)
-                      }}
-                      key={uniqueId('dropdown-item')}
-                    >
-                      {element}
-                    </MenuItem>
-                  ))}
+                  {options.map(({ element, onClickHandler, onEndClose = true, divider, href }) =>
+                    divider ? (
+                      <Divider key={uniqueId('dropdown-divider')} />
+                    ) : (
+                      // fixme: generating <a> tag instead <li>, sounds like a bad case
+                      <MenuItem
+                        component={href ? NextLink : 'li'}
+                        href={href ?? ''}
+                        onClick={async (event: Event | React.SyntheticEvent) => {
+                          if (onClickHandler) await onClickHandler()
+                          if (onEndClose) handleClose(event)
+                        }}
+                        key={uniqueId('dropdown-item')}
+                      >
+                        {element}
+                      </MenuItem>
+                    )
+                  )}
                 </MenuList>
               </ClickAwayListener>
             </Paper>

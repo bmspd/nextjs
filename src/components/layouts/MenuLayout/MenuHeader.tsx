@@ -4,31 +4,17 @@ import React from 'react'
 import styles from './styles.module.scss'
 import { Avatar } from '@mui/material'
 import DropDown from '../../DropDown'
-import { signOut } from 'next-auth/react'
+import { Z_INDEX } from '@/constants/global.constants'
+import { userOptions } from '@/components/layouts/MenuLayout/userOptions'
 const MenuHeader = () => {
-  const promiseFoo = async () => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        console.log('i am done!')
-        resolve(true)
-      }, 2000)
-    })
-  }
   return (
-    <header className={styles.menuHeader}>
-      <div style={{ width: '100%', height: '100%' }}>
+    <header className={styles.menuHeader} style={{ zIndex: Z_INDEX.HEADER }}>
+      <div className={styles.menuHeaderContent}>
         <div>LEFT SIDE</div>
         <div className={styles.headerProfile}>
           <DropDown
             control={<Avatar sx={{ width: 56, height: 56 }}>A</Avatar>}
-            options={[
-              { element: 'First', onClickHandler: promiseFoo, onEndClose: true },
-              {
-                element: 'Log out',
-                onClickHandler: async () => signOut({ redirect: false }),
-                onEndClose: false,
-              },
-            ]}
+            options={userOptions}
           />
         </div>
       </div>
