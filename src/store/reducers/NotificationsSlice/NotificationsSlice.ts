@@ -28,7 +28,6 @@ const NotificationsSlice = createSlice({
     },
     closeSnackbar: (state, action: PayloadAction<SnackbarKey | undefined>) => {
       const dismissAll = !action.payload
-      console.log(dismissAll)
       state.notifications = [
         ...state.notifications.map((notification) =>
           dismissAll || notification.key === action.payload

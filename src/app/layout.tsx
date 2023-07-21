@@ -2,8 +2,9 @@ import React from 'react'
 import ThemeRegistry from '../components/Theme/ThemeRegistry/ThemeRegistry'
 import StoreProvider from '../store/StoreProvider'
 import SnackBarProvider from '../components/Providers/SnackBarProvider'
-import '../styles/_global.scss'
 import NextAuthProvider from '@/components/Providers/NextAuthProvider'
+import LoaderLayout from '@/components/layouts/LoaderLayout'
+import '../styles/_global.scss'
 
 export const metadata = {
   title: 'Create Next App',
@@ -17,7 +18,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <StoreProvider>
           <NextAuthProvider>
             <ThemeRegistry>
-              <SnackBarProvider>{children}</SnackBarProvider>
+              <SnackBarProvider>
+                <LoaderLayout>{children}</LoaderLayout>
+              </SnackBarProvider>
             </ThemeRegistry>
           </NextAuthProvider>
         </StoreProvider>

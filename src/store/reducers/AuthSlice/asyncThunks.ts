@@ -5,6 +5,14 @@ import AuthService, {
 } from '../../../http/services/AuthService'
 import { tryCatch } from '../../../decorators'
 import { setProfile } from '../ProfileSlice/ProfileSlice'
+import {
+  SignInAuthorizationParams,
+  SignInOptions,
+  SignInResponse,
+  SignOutParams,
+} from 'next-auth/react'
+import { signOut as nextAuthSignOut, signIn as nextAuthSignIn } from 'next-auth/react'
+import { BuiltInProviderType } from 'next-auth/providers'
 
 export const login = createAsyncThunk(
   'auth/login',
@@ -34,3 +42,24 @@ export const signUp = createAsyncThunk(
     return response.data
   })
 )
+
+export const signOut = createAsyncThunk(
+  'auth/signout',
+  async (options?: SignOutParams<false> | undefined) => {
+    const response = await nextAuthSignOut(options)
+    return response
+  }
+)
+
+export const signIn = createAsyncThunk<
+  SignInResponse | undefined,
+  {
+    // todo provider должен иметь немного другой тип
+    provider?: BuiltInProviderType
+    options?: SignInOptions
+    authorizationParams?: SignInAuthorizationParams
+  }
+>('auth/signin', async ({ provider, options, authorizationParams }) => {
+  const res = await nextAuthSignIn(provider, options, authorizationParams)
+  return res
+})

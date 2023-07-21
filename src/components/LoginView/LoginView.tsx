@@ -8,7 +8,9 @@ import DefaultAlert from '../Alerts/DefaultAlert'
 import Link from 'next/link'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { logInSchema } from '@/validation/login.validation'
-import { signIn } from 'next-auth/react'
+import { useTypedDispatch } from '@/hooks/typedStoreHooks'
+import { signIn } from '@/store/reducers/AuthSlice/asyncThunks'
+import { SignInResponse } from 'next-auth/react'
 
 interface ILogInForm {
   username: string
@@ -25,14 +27,22 @@ const LoginView = () => {
     defaultValues: { username: '', password: '' },
     resolver: yupResolver(logInSchema),
   })
+  const dispatch = useTypedDispatch()
   const onSubmit: SubmitHandler<ILogInForm> = async (data) => {
-    const res = await signIn('credentials', { ...data, redirect: false })
-    if (res?.error) setError('root.serverError', { message: res.error })
+    const res = await dispatch(
+      signIn({ provider: 'credentials', options: { ...data, redirect: false } })
+    )
+    const payload = res.payload as SignInResponse | undefined
+
+    if (payload?.error) setError('root.serverError', { message: payload?.error })
   }
   return (
     <div className={styles.logInContainer}>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Button variant="contained" onClick={() => signIn('google', { redirect: false })}>
+        <Button
+          variant="contained"
+          onClick={() => dispatch(signIn({ provider: 'google', options: { redirect: false } }))}
+        >
           GOOGLE BUTTON
         </Button>
         <Controller

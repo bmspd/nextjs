@@ -12,7 +12,6 @@ const AuthLayout = ({ children }: { children: React.ReactNode }) => {
   const dispatch = useTypedDispatch()
   const session = useSession()
   useEffect(() => {
-    console.log(session)
     if (session.status === 'authenticated') {
       const { tokens, ...rest } = session.data
       dispatch(setAuthState(true))
@@ -21,7 +20,6 @@ const AuthLayout = ({ children }: { children: React.ReactNode }) => {
       localStorage.setItem('refreshToken', tokens.refreshToken)
     }
   }, [session])
-
   if (session.status === 'loading') return <DefaultLoader />
   if (session.status === 'unauthenticated') return <LoginView />
   return <>{children}</>

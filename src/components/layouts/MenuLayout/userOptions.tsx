@@ -2,11 +2,9 @@ import { ListItem, ListItemIcon, ListItemText } from '@mui/material'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
 import SettingsIcon from '@mui/icons-material/Settings'
 import LogoutIcon from '@mui/icons-material/Logout'
-import { signOut } from 'next-auth/react'
 import React from 'react'
 import { DropDownOption } from '@/components/DropDown'
-
-export const userOptions: DropDownOption[] = [
+export const userOptions = (logOutHandler: () => void): DropDownOption[] => [
   {
     element: (
       <ListItem disablePadding>
@@ -39,7 +37,7 @@ export const userOptions: DropDownOption[] = [
         <ListItemText primary="Log out" />
       </ListItem>
     ),
-    onClickHandler: async () => signOut({ redirect: false }),
+    onClickHandler: logOutHandler,
     onEndClose: false,
   },
 ]
