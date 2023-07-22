@@ -7,12 +7,16 @@
   background-color: white;
   width: 100%;
   box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
-  &Content {
+  .menuHeaderContent {
     margin: 0 auto;
     width: 100%;
     height: 100%;
     max-width: $content-max-width;
     padding: $step * 3 $main-side-padding;
+    .contentLeftSide {
+      display: flex;
+      gap: $step * 2;
+    }
   }
   > div {
     display: flex;
@@ -34,8 +38,15 @@
   margin: 0 auto;
 }
 .menuBar {
+  position: relative;
   padding: $default-padding $main-side-padding;
   width: 250px;
   flex-shrink: 0;
   background-color: #ddd;
+  transition: width 700ms;
+  overflow: hidden;
+  &Collapsed {
+    width: 20px + 36px + 20px + 4px;
+    transition: width 700ms;
+  }
 }

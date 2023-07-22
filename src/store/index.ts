@@ -1,6 +1,7 @@
 import { Action, configureStore, combineReducers, ThunkAction } from '@reduxjs/toolkit'
 import { loadingMiddleware } from './middlewares/loadingMiddleware'
 import AuthSlice from './reducers/AuthSlice/AuthSlice'
+import InterfaceSlice from './reducers/InterfaceSlice/InterfaceSlice'
 import LoadingSlice from './reducers/LoadingSlice/LoadingSlice'
 import NotificationsSlice from './reducers/NotificationsSlice/NotificationsSlice'
 import ProfileSlice from './reducers/ProfileSlice/ProfileSlice'
@@ -10,6 +11,7 @@ const rootReducer = combineReducers({
   notifications: NotificationsSlice,
   profile: ProfileSlice,
   loading: LoadingSlice,
+  interface: InterfaceSlice,
 })
 
 export const store = configureStore({

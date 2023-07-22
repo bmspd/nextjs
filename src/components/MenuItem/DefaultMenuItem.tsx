@@ -6,19 +6,26 @@ import {
   MenuItem,
   MenuItemProps,
 } from '@mui/material'
-import AccountCircleIcon from '@mui/icons-material/AccountCircle'
+import { merge } from 'lodash'
+import Link from 'next/link'
 
 interface DefaultMenuItemProps extends Omit<MenuItemProps, 'children'> {
   ListItemTextProps?: ListItemTextProps
+  iconComponent?: React.ReactElement
+  href?: string
 }
 
 const DefaultMenuItem = React.forwardRef<HTMLLIElement, DefaultMenuItemProps>((props, ref) => {
-  const { ListItemTextProps, ...rest } = props
+  const { ListItemTextProps, iconComponent, sx, href, ...rest } = props
   return (
-    <MenuItem ref={ref} {...rest}>
-      <ListItemIcon>
-        <AccountCircleIcon fontSize="medium" />
-      </ListItemIcon>
+    <MenuItem
+      href={href ?? ''}
+      component={href ? Link : 'li'}
+      ref={ref}
+      sx={merge({ gap: '24px' }, sx)}
+      {...rest}
+    >
+      <ListItemIcon>{iconComponent}</ListItemIcon>
       <ListItemText {...ListItemTextProps} />
     </MenuItem>
   )

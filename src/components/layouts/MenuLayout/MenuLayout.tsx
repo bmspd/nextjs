@@ -1,3 +1,4 @@
+'use client'
 import React from 'react'
 import MenuHeader from './MenuHeader'
 import MenuBar from '@/components/layouts/MenuLayout/MenuBar'
@@ -8,7 +9,7 @@ const MenuLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       <MenuHeader />
       <div className={styles.menuAndMain}>
         <MenuBar />
-        {children}
+        <main>{children}</main>
       </div>
     </>
   )

@@ -5,9 +5,7 @@ import MenuLayout from '../../components/layouts/MenuLayout/MenuLayout'
 export default async function WithAuthLayout({ children }: { children: React.ReactNode }) {
   return (
     <AuthLayout>
-      <MenuLayout>
-        <main>{children}</main>
-      </MenuLayout>
+      <MenuLayout>{children}</MenuLayout>
     </AuthLayout>
   )
 }
