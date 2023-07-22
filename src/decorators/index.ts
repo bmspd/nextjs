@@ -12,6 +12,9 @@ export function tryCatch(
     } catch (error: any) {
       const action = args[1]
       const { rejectWithValue } = action
+      if (!error?.response) {
+        return rejectWithValue({ data: { errors: { 'server-error': 'Something went wrong' } } })
+      }
       const { data, status, statusText } = error.response
       return rejectWithValue({ data, status, statusText })
     }

@@ -14,7 +14,7 @@ import { enqueueSnackbar } from '@/store/reducers/NotificationsSlice/Notificatio
 import { uniqueId } from 'lodash'
 import { SNACKBAR_TYPES } from '@/types/notistack'
 import { useRouter } from 'next/navigation'
-
+import DefaultAlert from '@/components/Alerts/DefaultAlert'
 interface ISignUpForm {
   email: string
   password: string
@@ -44,7 +44,9 @@ export default function SignUp() {
   const dispatch = useTypedDispatch()
   const onSubmit: SubmitHandler<ISignUpForm> = async (data) => {
     // todo подумать как сделать эту логику лучше и правильнее
-    const res = await dispatch(signUp(data)).then(setServerErrors)
+    const res = await dispatch(signUp(data))
+      .unwrap()
+      .catch((e) => setServerErrors(e))
     if (res) {
       router.push('/')
       dispatch(
@@ -123,6 +125,11 @@ export default function SignUp() {
                 alertMessage={errors?.second_name?.message}
               />
             )}
+          />
+          <DefaultAlert
+            severity="error"
+            message={errors.root?.serverError?.message}
+            isOpen={!!errors.root?.serverError?.message}
           />
           <Button type="submit" variant="contained">
             Sign Up
