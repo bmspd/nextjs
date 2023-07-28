@@ -16,7 +16,7 @@ import { BuiltInProviderType } from 'next-auth/providers'
 
 export const login = createAsyncThunk(
   'auth/login',
-  tryCatch(async (data: LoginRequestBody) => {
+  tryCatch<LoginRequestBody>(async (data) => {
     const response = await AuthService.login(data)
     return response.data
   })
@@ -37,7 +37,7 @@ export const loginByToken = createAsyncThunk('auth/loginByToken', async (arg, { 
 
 export const signUp = createAsyncThunk(
   'auth/signup',
-  tryCatch(async (data: SignUpRequestBody) => {
+  tryCatch<SignUpRequestBody>(async (data) => {
     const response = await AuthService.signUp(data)
     return response.data
   })

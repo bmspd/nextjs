@@ -11,10 +11,15 @@ import { signOut } from '@/store/reducers/AuthSlice/asyncThunks'
 import Link from 'next/link'
 import { toggleMenuBarCollapsed } from '@/store/reducers/InterfaceSlice/InterfaceSlice'
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator'
+import { useRouter } from 'next/navigation'
+
 const MenuHeader = React.memo(() => {
   const dispatch = useTypedDispatch()
+  const nextRouter = useRouter()
   const logOutHandler = async () => {
-    dispatch(signOut({ redirect: false }))
+    dispatch(signOut({ redirect: false, callbackUrl: '/' }))
+      .unwrap()
+      .then((res) => nextRouter.push(res.url))
   }
   return (
     <header className={styles.menuHeader} style={{ zIndex: Z_INDEX.HEADER }}>

@@ -1,8 +1,8 @@
-import { useTypedDispatch, useTypedSelector } from './typedStoreHooks'
-import { selectNotifications } from '../store/reducers/NotificationsSlice/selectors'
 import { SnackbarKey, useSnackbar } from 'notistack'
 import { useEffect } from 'react'
 import { removeSnackbar } from '../store/reducers/NotificationsSlice/NotificationsSlice'
+import { selectNotifications } from '../store/reducers/NotificationsSlice/selectors'
+import { useTypedDispatch, useTypedSelector } from './typedStoreHooks'
 
 let displayed: SnackbarKey[] = []
 

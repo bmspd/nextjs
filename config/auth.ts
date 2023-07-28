@@ -85,6 +85,7 @@ export const authConfig: AuthOptions = {
         firstName: profile.first_name,
         secondName: profile.second_name,
         emailVerified: profile.email_verified,
+        linkSent: profile.link_sent,
         accessToken: userFromToken.accessToken,
         refreshToken: userFromToken.refreshToken,
       }

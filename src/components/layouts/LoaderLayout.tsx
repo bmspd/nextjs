@@ -4,7 +4,7 @@ import { selectLoading } from '@/store/reducers/LoadingSlice/selectors'
 import React, { useRef } from 'react'
 import PageLoader from '../Loaders/PageLoader'
 import { CSSTransition } from 'react-transition-group'
-import loaderStles from '../Loaders/styles.module.scss'
+import loaderStyles from '../Loaders/styles.module.scss'
 const LoaderLayout = ({ children }: { children: React.ReactNode }) => {
   const isLoading = useTypedSelector(selectLoading)
   const ref = useRef<HTMLDivElement>(null)
@@ -16,10 +16,10 @@ const LoaderLayout = ({ children }: { children: React.ReactNode }) => {
         nodeRef={ref}
         in={isLoading}
         classNames={{
-          enter: loaderStles.pageLoaderEnter,
-          enterActive: loaderStles.pageLoaderEnterActive,
-          exit: loaderStles.pageLoaderExit,
-          exitActive: loaderStles.pageLoaderExitActive,
+          enter: loaderStyles.pageLoaderEnter,
+          enterActive: loaderStyles.pageLoaderEnterActive,
+          exit: loaderStyles.pageLoaderExit,
+          exitActive: loaderStyles.pageLoaderExitActive,
         }}
         unmountOnExit
       >

@@ -1,0 +1,27 @@
+@import "../../../styles/variables";
+
+.profilePage {
+  display: flex;
+  flex-direction: column;
+  gap: $step * 4;
+}
+.profilePageBlock {
+  .editProfileHeader,.statusProfileHeader {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: $step;
+    margin-bottom: $step * 2;
+  }
+  .editProfileForm {
+    display: flex;
+    flex-direction: column;
+    gap: $step * 2;
+  }
+  .blockElement {
+    display: flex;
+    flex-direction: column;
+    gap: $step * 4;
+  }
+}

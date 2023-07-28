@@ -7,7 +7,7 @@ import { DropDownOption } from '@/components/DropDown'
 export const userOptions = (logOutHandler: () => void): DropDownOption[] => [
   {
     element: (
-      <ListItem disablePadding>
+      <ListItem disablePadding component="div">
         <ListItemIcon>
           <AccountCircleIcon fontSize="small" />
         </ListItemIcon>
@@ -18,7 +18,7 @@ export const userOptions = (logOutHandler: () => void): DropDownOption[] => [
   },
   {
     element: (
-      <ListItem disablePadding>
+      <ListItem disablePadding component="div">
         <ListItemIcon>
           <SettingsIcon fontSize="small" />
         </ListItemIcon>
@@ -30,7 +30,7 @@ export const userOptions = (logOutHandler: () => void): DropDownOption[] => [
   { divider: true },
   {
     element: (
-      <ListItem disablePadding>
+      <ListItem disablePadding component="div">
         <ListItemIcon>
           <LogoutIcon fontSize="small" />
         </ListItemIcon>

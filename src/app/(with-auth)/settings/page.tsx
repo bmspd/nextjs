@@ -4,7 +4,7 @@ import MainBlock from '@/components/Blocks/MainBlock'
 export default function Home() {
   return (
     <div>
-      <MainBlock>I AM SETTINGS PAGE</MainBlock>
+      <MainBlock>I AM SETTINGS PAGE - CHANGE PASSWORD, DELETE ACCOUNT</MainBlock>
     </div>
   )
 }

@@ -7,12 +7,12 @@ import { capitalize } from 'lodash'
 
 const REQ_LABEL = (label: React.ReactNode) => `${label} *`
 const DefaultTextField = React.forwardRef<HTMLInputElement, DefaultTextFieldProps>((props, ref) => {
-  const { isRequired, alertMessage, ...rest } = props
+  const { isRequired, alertMessage, InputLabelProps, ...rest } = props
   const valueRef = useRef<HTMLInputElement>()
   /* don't like original 'required' prop - causes built-in form validation instead schema resolvers */
   const label = isRequired ? REQ_LABEL(props.label) : props.label
+  const showClearIcon = (valueRef?.current?.value || props.value) && !props?.disabled
 
-  const showClearIcon = valueRef?.current?.value || props.value
   const handleClearButton = () => {
     if (props.onChange) {
       props.onChange({ target: { value: '' } } as React.ChangeEvent<HTMLInputElement>)
@@ -37,6 +37,11 @@ const DefaultTextField = React.forwardRef<HTMLInputElement, DefaultTextFieldProp
         ref={ref}
         label={label}
         inputRef={valueRef}
+        /* when default values from react-hook-form label stays upside, even after handleClearButton */
+        InputLabelProps={{
+          ...InputLabelProps,
+          shrink: props.value !== undefined ? !!props.value : undefined,
+        }}
         InputProps={{
           endAdornment: (
             <>
