@@ -5,11 +5,13 @@ import InterfaceSlice from './reducers/InterfaceSlice/InterfaceSlice'
 import LoadingSlice from './reducers/LoadingSlice/LoadingSlice'
 import NotificationsSlice from './reducers/NotificationsSlice/NotificationsSlice'
 import ProfileSlice from './reducers/ProfileSlice/ProfileSlice'
+import UserSlice from './reducers/UserSlice/UserSlice'
 
 const rootReducer = combineReducers({
   auth: AuthSlice,
   notifications: NotificationsSlice,
   profile: ProfileSlice,
+  user: UserSlice,
   loading: LoadingSlice,
   interface: InterfaceSlice,
 })

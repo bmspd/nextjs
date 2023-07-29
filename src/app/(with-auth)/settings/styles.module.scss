@@ -1,0 +1,22 @@
+@import '../../../styles/variables';
+
+.settings {
+  display: flex;
+  flex-direction: column;
+  gap: $step * 4;
+}
+.block {
+  .blockHeader {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: $step;
+    margin-bottom: $step * 2;
+  }
+  .blockMain {
+    display: flex;
+    flex-direction: column;
+    gap: $step * 2;
+  }
+}
