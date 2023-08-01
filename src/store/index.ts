@@ -3,6 +3,7 @@ import { loadingMiddleware } from './middlewares/loadingMiddleware'
 import AuthSlice from './reducers/AuthSlice/AuthSlice'
 import InterfaceSlice from './reducers/InterfaceSlice/InterfaceSlice'
 import LoadingSlice from './reducers/LoadingSlice/LoadingSlice'
+import ModalSlice from './reducers/ModalSlice/ModalSlice'
 import NotificationsSlice from './reducers/NotificationsSlice/NotificationsSlice'
 import ProfileSlice from './reducers/ProfileSlice/ProfileSlice'
 import UserSlice from './reducers/UserSlice/UserSlice'
@@ -14,11 +15,19 @@ const rootReducer = combineReducers({
   user: UserSlice,
   loading: LoadingSlice,
   interface: InterfaceSlice,
+  modal: ModalSlice,
 })
 
 export const store = configureStore({
   reducer: rootReducer,
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware().prepend(loadingMiddleware),
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      // don't know ho to do better with centralized dynamic modal, then to turn off check :(
+      serializableCheck: {
+        ignoredActions: ['modal/openModal'],
+        ignoredPaths: ['modal'],
+      },
+    }).prepend(loadingMiddleware),
 })
 
 export type AppDispatch = typeof store.dispatch

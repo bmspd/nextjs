@@ -13,6 +13,16 @@ const defaultTheme = createTheme(
       body1: { fontFamily: GoogleInterFont.style.fontFamily },
       body2: { fontFamily: GoogleInterFont.style.fontFamily },
     },*/
+    components: {
+      MuiDialog: {
+        styleOverrides: {
+          paper: {
+            minWidth: 600,
+            maxWidth: 800,
+          },
+        },
+      },
+    },
   },
   {} as ThemeOptions
 )

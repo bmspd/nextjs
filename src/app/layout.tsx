@@ -4,6 +4,7 @@ import StoreProvider from '../store/StoreProvider'
 import SnackBarProvider from '../components/Providers/SnackBarProvider'
 import NextAuthProvider from '@/components/Providers/NextAuthProvider'
 import LoaderLayout from '@/components/layouts/LoaderLayout'
+import ModalLayout from '@/components/layouts/ModalLayout/ModalLayout'
 import '../styles/_global.scss'
 
 export const metadata = {
@@ -19,7 +20,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <NextAuthProvider>
             <ThemeRegistry>
               <SnackBarProvider>
-                <LoaderLayout>{children}</LoaderLayout>
+                <LoaderLayout>
+                  <ModalLayout>{children}</ModalLayout>
+                </LoaderLayout>
               </SnackBarProvider>
             </ThemeRegistry>
           </NextAuthProvider>
