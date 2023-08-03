@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { login, loginByToken, signUp } from './asyncThunks'
+import { login } from './asyncThunks'
 
 type InitialAuthState = {
   isAuth: boolean
@@ -16,28 +16,18 @@ const AuthSlice = createSlice({
     setAuthState: (state, action: PayloadAction<boolean>) => {
       state.isAuth = action.payload
     },
+    resetStore: () => {
+      // eslint-disable-next-line
+      console.log('reseting session data...')
+    },
   },
   extraReducers: (builder) =>
-    builder
-      .addCase(login.fulfilled, (state, action) => {
-        // вопрос, это должно быть в теле asyncThunk или тут?
-        localStorage.setItem('accessToken', action.payload.accessToken)
-        localStorage.setItem('refreshToken', action.payload.refreshToken)
-        state.isAuth = true
-      })
-      .addCase(login.rejected, () => {
-        console.log('REJECTED!')
-      })
-      .addCase(loginByToken.fulfilled, (state, action) => {
-        state.isAuth = true
-        console.log(action)
-      })
-      .addCase(signUp.fulfilled, () => {
-        console.log('FULFILLED')
-      })
-      .addCase(signUp.rejected, (state, action) => {
-        console.log('rejected', action)
-      }),
+    builder.addCase(login.fulfilled, (state, action) => {
+      // вопрос, это должно быть в теле asyncThunk или тут?
+      localStorage.setItem('accessToken', action.payload.accessToken)
+      localStorage.setItem('refreshToken', action.payload.refreshToken)
+      state.isAuth = true
+    }),
 })
-export const { setAuthState } = AuthSlice.actions
+export const { setAuthState, resetStore } = AuthSlice.actions
 export default AuthSlice.reducer

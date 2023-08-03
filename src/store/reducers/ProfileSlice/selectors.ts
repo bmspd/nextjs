@@ -8,3 +8,4 @@ export const selectLinkSent = (state: RootState) => {
   return null
 }
 export const selectIsEmailVerified = (state: RootState) => selectProfile(state).emailVerified
+export const selectIsPasswordNeedSet = (state: RootState) => selectProfile(state).password === null

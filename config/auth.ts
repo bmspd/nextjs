@@ -79,7 +79,7 @@ export const authConfig: AuthOptions = {
     async session({ token }) {
       const userFromToken = token.user
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { profile, password, ...rest } = userFromToken.data
+      const { profile, ...rest } = userFromToken.data
       const formattedProfile = {
         ...rest,
         firstName: profile.first_name,

@@ -12,6 +12,7 @@ import Link from 'next/link'
 import { toggleMenuBarCollapsed } from '@/store/reducers/InterfaceSlice/InterfaceSlice'
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator'
 import { useRouter } from 'next/navigation'
+import { resetStore } from '@/store/reducers/AuthSlice/AuthSlice'
 
 const MenuHeader = React.memo(() => {
   const dispatch = useTypedDispatch()
@@ -19,7 +20,10 @@ const MenuHeader = React.memo(() => {
   const logOutHandler = async () => {
     dispatch(signOut({ redirect: false, callbackUrl: '/' }))
       .unwrap()
-      .then((res) => nextRouter.push(res.url))
+      .then((res) => {
+        nextRouter.push(res.url)
+        dispatch(resetStore())
+      })
   }
   return (
     <header className={styles.menuHeader} style={{ zIndex: Z_INDEX.HEADER }}>

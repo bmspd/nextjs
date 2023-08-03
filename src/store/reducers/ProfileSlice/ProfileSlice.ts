@@ -8,6 +8,7 @@ export type InitialProfileState = {
   secondName: string | null
   username: string
   email: string
+  password?: null
 }
 const initialState: InitialProfileState = {
   emailVerified: false,
@@ -25,6 +26,7 @@ const ProfileSlice = createSlice({
     setProfile: (state, { payload }: PayloadAction<InitialProfileState>) => {
       const keys = Object.keys(payload) as (keyof InitialProfileState)[]
       keys.forEach((key) => {
+        if (key === 'password') return
         if (state[key] === undefined && payload[key] !== undefined) delete payload[key]
       })
       return { ...state, ...payload }
