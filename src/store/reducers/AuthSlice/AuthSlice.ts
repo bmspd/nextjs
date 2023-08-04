@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { login } from './asyncThunks'
+import { login, loginByToken } from './asyncThunks'
 
 type InitialAuthState = {
   isAuth: boolean
@@ -22,12 +22,16 @@ const AuthSlice = createSlice({
     },
   },
   extraReducers: (builder) =>
-    builder.addCase(login.fulfilled, (state, action) => {
-      // вопрос, это должно быть в теле asyncThunk или тут?
-      localStorage.setItem('accessToken', action.payload.accessToken)
-      localStorage.setItem('refreshToken', action.payload.refreshToken)
-      state.isAuth = true
-    }),
+    builder
+      .addCase(login.fulfilled, (state, action) => {
+        // вопрос, это должно быть в теле asyncThunk или тут?
+        localStorage.setItem('accessToken', action.payload.accessToken)
+        localStorage.setItem('refreshToken', action.payload.refreshToken)
+        state.isAuth = true
+      })
+      .addCase(loginByToken.fulfilled, (state) => {
+        state.isAuth = true
+      }),
 })
 export const { setAuthState, resetStore } = AuthSlice.actions
 export default AuthSlice.reducer

@@ -20,3 +20,10 @@
     gap: $step * 2;
   }
 }
+
+.passwordForm {
+  margin-top: $step * 4; 
+  display: flex;
+  flex-direction: column;
+  gap: $step * 3;
+}

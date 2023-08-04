@@ -23,7 +23,7 @@ const ProfileSlice = createSlice({
   name: 'profile',
   initialState,
   reducers: {
-    setProfile: (state, { payload }: PayloadAction<InitialProfileState>) => {
+    setProfile: (state, { payload }: PayloadAction<Partial<InitialProfileState>>) => {
       const keys = Object.keys(payload) as (keyof InitialProfileState)[]
       keys.forEach((key) => {
         if (key === 'password') return
