@@ -47,7 +47,7 @@ const ModalLayout = ({ children }: { children: React.ReactNode }) => {
           <CustomDialogTitle id="dialog-title" onClose={handleClose}>
             {title}
           </CustomDialogTitle>
-          <DialogContent dividers>{content}</DialogContent>
+          <DialogContent dividers>{!!content && content({ handleClose })}</DialogContent>
           {!!customActions && (
             <DialogActions>{customActions.map((action) => action)}</DialogActions>
           )}

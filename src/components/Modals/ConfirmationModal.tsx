@@ -9,11 +9,12 @@ import React from 'react'
 const Content: React.FC<{ text?: string }> = ({ text }) => (
   <Typography fontSize={18}>{text}</Typography>
 )
-const ApplyBtn: React.FC<{ applyCb?: () => void; handleClose: () => void }> = ({
-  applyCb,
-  handleClose,
-}) => {
-  const isDeleting = useTypedSelector(selectSpecificLoading('user/deleteYourSelf'))
+const ApplyBtn: React.FC<{
+  applyCb?: () => void
+  handleClose: () => void
+  deleteFunc?: string
+}> = ({ applyCb, handleClose, deleteFunc }) => {
+  const isDeleting = useTypedSelector(selectSpecificLoading(deleteFunc ?? ''))
   return (
     <Button
       color="error"
@@ -33,16 +34,27 @@ const CancelBtn: React.FC<{ handleClose: () => void }> = ({ handleClose }) => (
     Cancel
   </Button>
 )
-type TConfirmationModal = { applyCb?: () => void; text?: string; title?: string }
+type TConfirmationModal = {
+  applyCb?: () => void
+  text?: string
+  title?: string
+  deleteFunc?: string
+}
 export const ConfirmationModal = ({
   applyCb,
   text,
   title,
+  deleteFunc,
 }: TConfirmationModal = {}): DialogModalProps => {
   return {
-    content: <Content text={text} />,
+    content: () => <Content text={text} />,
     actions: ({ handleClose }) => [
-      <ApplyBtn key="apply-btn" applyCb={applyCb} handleClose={handleClose} />,
+      <ApplyBtn
+        key="apply-btn"
+        applyCb={applyCb}
+        handleClose={handleClose}
+        deleteFunc={deleteFunc}
+      />,
       <CancelBtn key="cancel-btn" handleClose={handleClose} />,
     ],
     title,

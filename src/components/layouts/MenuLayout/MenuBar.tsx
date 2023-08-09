@@ -11,9 +11,7 @@ import HomeRoundedIcon from '@mui/icons-material/HomeRounded'
 const menuItems = [
   { title: '', iconComponent: <HomeRoundedIcon fontSize="large" />, href: '.' },
   { title: 'Projects', iconComponent: <AccountCircleIcon fontSize="large" />, href: 'projects' },
-  { title: 'Unknown link 1', iconComponent: <AccountCircleIcon fontSize="large" /> },
-  { title: 'Unknown link 2', iconComponent: <AccountCircleIcon fontSize="large" /> },
-  { title: 'Unknown link 3', iconComponent: <AccountCircleIcon fontSize="large" /> },
+  { title: 'Notes', iconComponent: <AccountCircleIcon fontSize="large" /> },
 ]
 const MenuBar: React.FC = () => {
   const collapsed = useTypedSelector(selectMenuBarCollapsed)

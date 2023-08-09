@@ -1,0 +1,9 @@
+@import '../../../styles/variables';
+
+.projectBoard {
+  display: flex;
+  flex-direction: row;
+  gap: $step * 3;
+  flex-wrap: wrap;
+  margin-top: $step * 4;
+}

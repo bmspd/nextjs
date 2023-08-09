@@ -10,7 +10,7 @@ const initialState: InitialModalState = {
   modalProps: {},
 }
 export interface DialogModalProps {
-  content?: React.ReactNode
+  content?: ({ handleClose }: { handleClose: () => void }) => React.ReactNode
   title?: string
   actions?: ({ handleClose }: { handleClose: () => void }) => React.ReactNode[]
 }

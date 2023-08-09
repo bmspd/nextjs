@@ -6,12 +6,14 @@ import LoadingSlice from './reducers/LoadingSlice/LoadingSlice'
 import ModalSlice from './reducers/ModalSlice/ModalSlice'
 import NotificationsSlice from './reducers/NotificationsSlice/NotificationsSlice'
 import ProfileSlice from './reducers/ProfileSlice/ProfileSlice'
+import ProjectSlice from './reducers/ProjectsSlice/ProjectSlice'
 import UserSlice from './reducers/UserSlice/UserSlice'
 
 const rootReducer = combineReducers({
   auth: AuthSlice,
   notifications: NotificationsSlice,
   profile: ProfileSlice,
+  projects: ProjectSlice,
   user: UserSlice,
   loading: LoadingSlice,
   interface: InterfaceSlice,

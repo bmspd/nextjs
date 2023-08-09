@@ -3,9 +3,9 @@ import { AsyncThunkPayloadCreator } from '@reduxjs/toolkit'
 
 // not sure if it is correct...
 // this decorator is made to send serverError to rejected state of asyncThunk
-export function tryCatch<T = void>(
-  fn: AsyncThunkPayloadCreator<any, T, any>
-): AsyncThunkPayloadCreator<any, T, any> {
+export function tryCatch<T = void, R = any>(
+  fn: AsyncThunkPayloadCreator<Promise<R>, T, any>
+): AsyncThunkPayloadCreator<R, T, any> {
   return async function (...args) {
     try {
       return await fn(...args)

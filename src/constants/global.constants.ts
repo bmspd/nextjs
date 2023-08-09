@@ -4,3 +4,7 @@ export const Z_INDEX = {
   PAGE_LOADER: 1000,
   MENU_ARROW: 100,
 }
+
+export enum ERRORS {
+  ANAUTHORIZED = 'ANAUTHORIZED',
+}

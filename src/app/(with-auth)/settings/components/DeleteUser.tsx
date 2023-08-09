@@ -49,6 +49,7 @@ const DeleteUser = () => {
                   applyCb,
                   text: 'Are you sure want to delete your account?',
                   title: 'Delete account',
+                  deleteFunc: 'user/deleteYourSelf',
                 })
               )
             )

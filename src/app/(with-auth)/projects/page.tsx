@@ -1,10 +1,6 @@
-import React from 'react'
-import MainBlock from '@/components/Blocks/MainBlock'
-
-export default function Home() {
-  return (
-    <div>
-      <MainBlock>I AM PROJECTS PAGE</MainBlock>
-    </div>
-  )
+import Projects from './Projects'
+import { serverSideRequest } from '@/utils/serverSideReq'
+export default async function Home() {
+  const serialized = await serverSideRequest({ url: 'projects/personal' })
+  return <Projects serverProjects={serialized} />
 }

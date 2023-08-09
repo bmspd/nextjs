@@ -17,7 +17,7 @@ interface ILogInForm {
   password: string
 }
 
-const LoginView = () => {
+const LoginView: React.FC<{ reset?: () => void }> = ({ reset }) => {
   const {
     control,
     handleSubmit,
@@ -35,6 +35,7 @@ const LoginView = () => {
     const payload = res.payload as SignInResponse | undefined
 
     if (payload?.error) setError('root.serverError', { message: payload?.error })
+    else if (reset) reset()
   }
   return (
     <div className={styles.logInContainer}>
