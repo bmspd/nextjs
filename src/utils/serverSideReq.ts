@@ -16,7 +16,8 @@ const refreshToken = async (refreshToken: string): Promise<string> => {
   const data = await result.json()
   return data?.accessToken
 }
-export const serverSideRequest = async (data: ServerSideReqData) => {
+type TServerSideRequest = <T>(data: ServerSideReqData) => Promise<T>
+export const serverSideRequest: TServerSideRequest = async (data) => {
   const session = await getServerSession(authConfig)
   const baseURL = process.env.NEXT_PUBLIC_BACKEND_BASEURL
   const url = `${baseURL}/${data.url}`
@@ -33,5 +34,9 @@ export const serverSideRequest = async (data: ServerSideReqData) => {
     })
     if (!newReqData.ok) throw new Error(ERRORS.ANAUTHORIZED)
     return newReqData.json()
+  } else if (reqData.status === 404) {
+    throw new Error(ERRORS.NOT_FOUND)
+  } else {
+    throw new Error(ERRORS.DEFAULT)
   }
 }

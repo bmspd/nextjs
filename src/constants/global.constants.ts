@@ -7,4 +7,6 @@ export const Z_INDEX = {
 
 export enum ERRORS {
   ANAUTHORIZED = 'ANAUTHORIZED',
+  NOT_FOUND = 'NOT FOUND',
+  DEFAULT = 'DEFAULT',
 }

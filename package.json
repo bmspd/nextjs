@@ -19,6 +19,7 @@
     "@mui/icons-material": "^5.11.16",
     "@mui/material": "^5.13.3",
     "@reduxjs/toolkit": "^1.9.5",
+    "@tanstack/react-table": "^8.9.3",
     "@types/lodash": "^4.14.195",
     "@types/node": "20.2.5",
     "@types/react": "18.2.7",

@@ -12,5 +12,7 @@ export default function Error({
   reset: () => void
 }) {
   if (error.message === ERRORS.ANAUTHORIZED) return <LoginView reset={reset} />
-  return <h1>THIS IS AN ERROR</h1>
+  else if (error.message === ERRORS.NOT_FOUND) return <h1>I AM 404</h1>
+  else if (error.message === ERRORS.DEFAULT) return <h1>I AM DEFAULT ERROR</h1>
+  return <h1>THIS IS NOT QUALIFIED ERROR</h1>
 }
