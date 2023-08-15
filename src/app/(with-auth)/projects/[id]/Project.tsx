@@ -10,11 +10,15 @@ import Table from '@/components/Table/Table'
 import { Button } from '@mui/material'
 import NextLink from 'next/link'
 import { getTasksByProject } from '@/store/reducers/ProjectsSlice/asyncThunks'
+import useId from '@mui/material/utils/useId'
+import { openModal } from '@/store/reducers/ModalSlice/ModalSlice'
+import CreateTasksModal from '@/components/Modals/CreateTasksModal'
 const Project: React.FC<{ id: string; serverTasks: ITaskWithPagination }> = ({
   id,
   serverTasks,
 }) => {
   const tasks = useTypedSelector(selectTasksByProject(+id)) ?? []
+  const formId = useId()
   const tasksData = tasks?.data ?? []
   const tasksPagination = tasks?.meta?.pagination
   const dispatch = useTypedDispatch()
@@ -61,9 +65,17 @@ const Project: React.FC<{ id: string; serverTasks: ITaskWithPagination }> = ({
   )
   return (
     <>
-      <MainBlock>PROJECT {id}</MainBlock>
-      {JSON.stringify(tasks)}
-      <MainBlock style={{ marginTop: '40px' }}>
+      <MainBlock sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div>PROJECT {id}</div>
+        <Button
+          onClick={() => {
+            dispatch(openModal(CreateTasksModal(formId)))
+          }}
+        >
+          Create Task
+        </Button>
+      </MainBlock>
+      <MainBlock sx={{ marginTop: 4 }}>
         <Table<ITask>
           data={tasksData}
           columns={columns}

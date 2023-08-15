@@ -19,10 +19,18 @@ export interface ITask {
   executor: IUser | null
   project: IProject
 }
-
+export type ICreateTaskBody = Pick<ITask, 'title' | 'description' | 'status' | 'priority'> & {
+  executor_id: number
+}
 export type ITaskWithPagination = DataWithPagination<ITask>
 export default class TasksService {
-  static async getAllTasksByProject(project_id: number): Promise<AxiosResponse> {
-    return $api.get<AxiosResponse>(`/projects/${project_id}/tasks`)
+  static async getAllTasksByProject(projectId: number): Promise<AxiosResponse> {
+    return $api.get<AxiosResponse>(`/projects/${projectId}/tasks`)
+  }
+  static async createNewTask(
+    projectId: number | string,
+    data: ICreateTaskBody
+  ): Promise<AxiosResponse> {
+    return $api.post<AxiosResponse>(`/projects/${projectId}/tasks`, data)
   }
 }

@@ -1,6 +1,6 @@
 import { tryCatch } from '@/decorators'
 import ProjectsService, { CreateProjectBody, IProject } from '@/http/services/ProjectsService'
-import { ITaskWithPagination } from '@/http/services/TaskService'
+import TasksService, { ICreateTaskBody, ITaskWithPagination } from '@/http/services/TaskService'
 import { PaginationParams } from '@/types/pagination'
 import { createAsyncThunk } from '@reduxjs/toolkit'
 
@@ -20,4 +20,12 @@ export const getTasksByProject = createAsyncThunk(
       return response.data
     }
   )
+)
+
+export const createTask = createAsyncThunk(
+  'projects/createTask',
+  tryCatch<{ projectId: number | string; body: ICreateTaskBody }>(async (data) => {
+    const response = await TasksService.createNewTask(data.projectId, data.body)
+    return response.data
+  })
 )

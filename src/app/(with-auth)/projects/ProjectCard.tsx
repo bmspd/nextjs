@@ -13,6 +13,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ name, id }) => {
     <Card
       href={`/projects/${id}`}
       component={NextLink}
+      prefetch={false}
       sx={{ maxWidth: 250, width: '100%', textDecoration: 'none' }}
     >
       <CardActionArea>

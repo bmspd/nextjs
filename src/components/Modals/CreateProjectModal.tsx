@@ -1,3 +1,4 @@
+'use client'
 import { useTypedDispatch, useTypedSelector } from '@/hooks/typedStoreHooks'
 import { CreateProjectBody } from '@/http/services/ProjectsService'
 import { selectSpecificLoading } from '@/store/reducers/LoadingSlice/selectors'
