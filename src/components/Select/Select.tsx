@@ -5,10 +5,10 @@ import React from 'react'
 
 export interface ISelectProps extends Omit<SelectProps, 'label' | 'labelId'> {
   placeholder: string
-  options: DropDownOptions[]
+  options: DropDownOption[]
 }
-export interface DropDownOptions {
-  value: string
+export interface DropDownOption {
+  value: string | number
   label: string
 }
 // TODO: insert error notification inside this component
