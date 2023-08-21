@@ -17,18 +17,29 @@ import {
   TASK_STATUSES_OPTIONS,
 } from '@/constants/tasks.constants'
 import { useTypedDispatch, useTypedSelector } from '@/hooks/typedStoreHooks'
-import { createTask, getTasksByProject } from '@/store/reducers/ProjectsSlice/asyncThunks'
+import {
+  createTask,
+  getTasksByProject,
+  getUsersByProject,
+} from '@/store/reducers/ProjectsSlice/asyncThunks'
 import { enqueueSnackbar } from '@/store/reducers/NotificationsSlice/NotificationsSlice'
 import { uniqueId } from 'lodash'
 import { selectSpecificLoading } from '@/store/reducers/LoadingSlice/selectors'
 import { SNACKBAR_TYPES } from '@/types/notistack'
-import { selectTasksByProject } from '@/store/reducers/ProjectsSlice/selectors'
+import {
+  selectTasksByProject,
+  selectUsersByProject,
+} from '@/store/reducers/ProjectsSlice/selectors'
+import AsyncSelect from '../Select/AsyncSelect'
+import { useRouter } from 'next/navigation'
+import { IUserInProjectWithPagination } from '@/http/services/ProjectsService'
 const Content: React.FC<{ formId: string | undefined; handlelose: () => void }> = ({
   formId,
   handlelose,
 }) => {
   const dispatch = useTypedDispatch()
   const params = useParams()
+  const router = useRouter()
   const tasks = useTypedSelector(selectTasksByProject(+params.id))
   const {
     control,
@@ -59,8 +70,10 @@ const Content: React.FC<{ formId: string | undefined; handlelose: () => void }> 
             projectId: params.id,
             params: { page: 1, per_page: tasks.meta.pagination.per_page },
           })
-        )
+          // need to invalidate cache from tasks
+        ).then(() => router.refresh())
       })
+
     handlelose()
   }
 
@@ -112,17 +125,23 @@ const Content: React.FC<{ formId: string | undefined; handlelose: () => void }> 
       <Controller
         name="executor_id"
         control={control}
-        render={({ field }) => (
-          <DefaultTextField
-            {...field}
-            label="Executor"
-            autoComplete="off"
-            type="text"
-            error={!!errors.executor_id?.message}
-            alertMessage={errors.executor_id?.message}
-          />
-        )}
-      />
+        render={({ field }) => {
+          return (
+            <AsyncSelect<IUserInProjectWithPagination>
+              controlProps={{ ...field }}
+              valueField="id"
+              labelField="username"
+              selector={selectUsersByProject(+params.id)}
+              fetchCallback={(page, per_page, timestamp?) =>
+                dispatch(getUsersByProject({ projectId: 1, params: { page, per_page }, timestamp }))
+              }
+              loadingFunc="projects/getUsersByProject"
+              error={!!errors.executor_id?.message}
+              alertMessage={errors.executor_id?.message}
+            />
+          )
+        }}
+      ></Controller>
     </form>
   )
 }

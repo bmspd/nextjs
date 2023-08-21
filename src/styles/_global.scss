@@ -2,6 +2,14 @@
 html {
   height: 100%;
 }
+.default-link {
+  text-decoration: none;
+  color: #4813F0;
+  transition: color 0.5s;
+}
+.default-link:hover {
+  color: #4078EF;
+}
 body {
   overflow-x: hidden;
   min-height: 100vh;

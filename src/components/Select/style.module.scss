@@ -1,0 +1,9 @@
+@import '../../styles/variables';
+.selectWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: #{$step * 2};
+  > :global(.MuiTextField-root) {
+    width: 100%;
+  }
+}

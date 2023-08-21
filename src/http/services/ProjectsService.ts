@@ -1,6 +1,13 @@
 import { AxiosResponse } from 'axios'
 import $api from '..'
-import { PaginationParams } from '@/types/pagination'
+import { DataWithPagination, PaginationParams } from '@/types/pagination'
+
+export interface IUserInProject {
+  id: number
+  email: string
+  username: string
+}
+export type IUserInProjectWithPagination = DataWithPagination<IUserInProject>
 export interface IProject {
   id: number
   name: string
@@ -15,5 +22,11 @@ export default class ProjectsService {
     params: PaginationParams
   ): Promise<AxiosResponse> {
     return $api.get<AxiosResponse>(`/projects/${projectId}/tasks`, { params: params })
+  }
+  static async getUsersByProject(
+    projectId: string | number,
+    params: PaginationParams
+  ): Promise<AxiosResponse> {
+    return $api.get<AxiosResponse>(`/projects/${projectId}/users`, { params: params })
   }
 }

@@ -4,7 +4,10 @@ export interface ServerPagintion {
   total: number
   last_page: number
 }
-
+export interface RefetchOptions {
+  timestamp: Date
+}
 export interface ServerMetaData {
   pagination: ServerPagintion
+  refetch?: RefetchOptions
 }

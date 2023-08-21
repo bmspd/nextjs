@@ -82,7 +82,10 @@ const LoginView: React.FC<{ reset?: () => void }> = ({ reset }) => {
         />
       </form>
       <p>
-        <Link href="sign-up">Sign up</Link>, if you has not registered yet
+        <Link className="default-link" href="sign-up">
+          Sign up
+        </Link>
+        , if you has not registered yet
       </p>
     </div>
   )

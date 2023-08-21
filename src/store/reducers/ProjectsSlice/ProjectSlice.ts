@@ -1,13 +1,16 @@
-import { IProject } from '@/http/services/ProjectsService'
+import { IProject, IUserInProjectWithPagination } from '@/http/services/ProjectsService'
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { createProject, getTasksByProject } from './asyncThunks'
+import { createProject, getTasksByProject, getUsersByProject } from './asyncThunks'
 import { ITaskWithPagination } from '@/http/services/TaskService'
+import { merge } from 'lodash'
 type InitialState = {
   projects: Record<number, IProject>
+  usersByProject: Record<number, IUserInProjectWithPagination>
   tasksByProject: Record<number, ITaskWithPagination>
 }
 const initialState: InitialState = {
   projects: {},
+  usersByProject: {},
   tasksByProject: {},
 }
 
@@ -36,6 +39,19 @@ const ProjectsSlice = createSlice({
         const { payload, meta } = action
         const projectId = +meta.arg.projectId
         state.tasksByProject[projectId] = payload
+      })
+      .addCase(getUsersByProject.fulfilled, (state, action) => {
+        const { payload, meta } = action
+        const projectId = +meta.arg.projectId
+        const currentUsers = state.usersByProject[projectId]
+        const timestamp = meta.arg.timestamp
+        if (!currentUsers || timestamp) state.usersByProject[projectId] = payload
+        else if (currentUsers.meta.pagination.page < payload.meta.pagination.page) {
+          state.usersByProject[projectId] = {
+            data: currentUsers.data.concat(payload.data),
+            meta: merge(currentUsers.meta, payload.meta),
+          }
+        }
       }),
 })
 

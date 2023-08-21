@@ -4,6 +4,8 @@ import { getServerSession } from 'next-auth'
 
 export type ServerSideReqData = {
   url: string
+  tags?: string[]
+  cache?: RequestCache
 }
 const refreshToken = async (refreshToken: string): Promise<string> => {
   const baseURL = process.env.NEXT_PUBLIC_BACKEND_BASEURL
@@ -22,6 +24,8 @@ export const serverSideRequest: TServerSideRequest = async (data) => {
   const baseURL = process.env.NEXT_PUBLIC_BACKEND_BASEURL
   const url = `${baseURL}/${data.url}`
   const reqData = await fetch(url, {
+    next: { tags: data.tags },
+    cache: data.cache,
     headers: { Authorization: `Bearer ${session?.tokens?.accessToken}` },
   })
   if (reqData.ok) return reqData.json()
@@ -30,6 +34,8 @@ export const serverSideRequest: TServerSideRequest = async (data) => {
     if (!rToken) throw new Error(ERRORS.ANAUTHORIZED)
     const newToken = await refreshToken(rToken)
     const newReqData = await fetch(url, {
+      next: { tags: data.tags },
+      cache: data.cache,
       headers: { Authorization: `Bearer ${newToken}` },
     })
     if (!newReqData.ok) throw new Error(ERRORS.ANAUTHORIZED)

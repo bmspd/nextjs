@@ -43,7 +43,11 @@ const Project: React.FC<{ id: string; serverTasks: ITaskWithPagination }> = ({
           const taskId = props.row.original.id
           const value = props.getValue<string>()
           // relative path works without projectId D:
-          return <NextLink href={`/projects/${id}/task/${taskId}`}>{value}</NextLink>
+          return (
+            <NextLink className="default-link" href={`/projects/${id}/task/${taskId}`}>
+              {value}
+            </NextLink>
+          )
         },
       },
       { header: 'Description', accessorKey: 'description' },
