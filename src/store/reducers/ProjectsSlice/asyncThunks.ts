@@ -34,10 +34,18 @@ export const createTask = createAsyncThunk(
   })
 )
 
+export const deleteTask = createAsyncThunk(
+  'projects/deleteTask',
+  tryCatch<{ projectId: string | number; taskId: string | number }>(async (data) => {
+    const response = await TasksService.deleteTask(data.projectId, data.taskId)
+    return response.data
+  })
+)
+
 export const getUsersByProject = createAsyncThunk(
   'projects/getUsersByProject',
   tryCatch<
-    { projectId: number | string; params: PaginationParams; timestamp?: Date },
+    { projectId: number | string; params: PaginationParams; timestamp?: number },
     IUserInProjectWithPagination
   >(async (data) => {
     const response = await ProjectsService.getUsersByProject(data.projectId, data.params)

@@ -5,7 +5,7 @@ export interface ServerPagintion {
   last_page: number
 }
 export interface RefetchOptions {
-  timestamp: Date
+  timestamp: number
 }
 export interface ServerMetaData {
   pagination: ServerPagintion

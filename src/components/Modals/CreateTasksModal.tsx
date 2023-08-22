@@ -1,5 +1,5 @@
 'use client'
-import { ICreateTaskBody } from '@/http/services/TaskService'
+import { ICreateTaskForm } from '@/http/services/TaskService'
 import { createTaskSchema } from '@/validation/task.validation'
 import { yupResolver } from '@hookform/resolvers/yup'
 import React from 'react'
@@ -49,11 +49,16 @@ const Content: React.FC<{ formId: string | undefined; handlelose: () => void }> 
     defaultValues: {
       status: TASK_DEFAULT_STATUS,
       priority: TASK_DEFAULT_PRIORITY,
+      title: '',
+      description: '',
     },
     resolver: yupResolver(createTaskSchema),
   })
-  const onSubmit: SubmitHandler<ICreateTaskBody> = async (data) => {
-    await dispatch(createTask({ projectId: params.id, body: data }))
+  const onSubmit: SubmitHandler<ICreateTaskForm> = async (data) => {
+    const { executor, ...rest } = data
+    await dispatch(
+      createTask({ projectId: params.id, body: { ...rest, executor_id: executor.id } })
+    )
       .unwrap()
       .then(() => {
         dispatch(
@@ -123,11 +128,12 @@ const Content: React.FC<{ formId: string | undefined; handlelose: () => void }> 
         )}
       ></Controller>
       <Controller
-        name="executor_id"
+        name="executor"
         control={control}
         render={({ field }) => {
           return (
             <AsyncSelect<IUserInProjectWithPagination>
+              label="Executor"
               controlProps={{ ...field }}
               valueField="id"
               labelField="username"
@@ -136,8 +142,8 @@ const Content: React.FC<{ formId: string | undefined; handlelose: () => void }> 
                 dispatch(getUsersByProject({ projectId: 1, params: { page, per_page }, timestamp }))
               }
               loadingFunc="projects/getUsersByProject"
-              error={!!errors.executor_id?.message}
-              alertMessage={errors.executor_id?.message}
+              error={!!errors.executor?.message}
+              alertMessage={errors.executor?.message}
             />
           )
         }}

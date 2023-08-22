@@ -1,6 +1,6 @@
 import { IProject, IUserInProjectWithPagination } from '@/http/services/ProjectsService'
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { createProject, getTasksByProject, getUsersByProject } from './asyncThunks'
+import { createProject, deleteTask, getTasksByProject, getUsersByProject } from './asyncThunks'
 import { ITaskWithPagination } from '@/http/services/TaskService'
 import { merge } from 'lodash'
 type InitialState = {
@@ -34,6 +34,12 @@ const ProjectsSlice = createSlice({
       .addCase(createProject.fulfilled, (state, action) => {
         const { payload } = action
         state.projects[payload.id] = payload
+      })
+      .addCase(deleteTask.fulfilled, (state, action) => {
+        const { meta } = action
+        state.tasksByProject[+meta.arg.projectId].data = state.tasksByProject[
+          +meta.arg.projectId
+        ].data.filter((task) => task.id !== +meta.arg.taskId)
       })
       .addCase(getTasksByProject.fulfilled, (state, action) => {
         const { payload, meta } = action

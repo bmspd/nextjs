@@ -22,6 +22,11 @@ export interface ITask {
 export type ICreateTaskBody = Pick<ITask, 'title' | 'description' | 'status' | 'priority'> & {
   executor_id: number
 }
+export type ICreateTaskForm = Pick<ITask, 'title' | 'description' | 'status' | 'priority'> & {
+  executor: {
+    id: number
+  }
+}
 export type ITaskWithPagination = DataWithPagination<ITask>
 export default class TasksService {
   static async getAllTasksByProject(projectId: number): Promise<AxiosResponse> {
@@ -32,5 +37,11 @@ export default class TasksService {
     data: ICreateTaskBody
   ): Promise<AxiosResponse> {
     return $api.post<AxiosResponse>(`/projects/${projectId}/tasks`, data)
+  }
+  static async deleteTask(
+    projectId: number | string,
+    taskId: number | string
+  ): Promise<AxiosResponse> {
+    return $api.delete<AxiosResponse>(`/projects/${projectId}/tasks/${taskId}`)
   }
 }

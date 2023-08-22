@@ -5,14 +5,20 @@ import { useTypedDispatch, useTypedSelector } from '@/hooks/typedStoreHooks'
 import { ITask, ITaskWithPagination } from '@/http/services/TaskService'
 import { setTasks } from '@/store/reducers/ProjectsSlice/ProjectSlice'
 import { selectTasksByProject } from '@/store/reducers/ProjectsSlice/selectors'
-import { ColumnDef } from '@tanstack/react-table'
+import { CellContext, ColumnDef } from '@tanstack/react-table'
 import Table from '@/components/Table/Table'
-import { Button } from '@mui/material'
+import { Button, IconButton } from '@mui/material'
 import NextLink from 'next/link'
-import { getTasksByProject } from '@/store/reducers/ProjectsSlice/asyncThunks'
+import { deleteTask, getTasksByProject } from '@/store/reducers/ProjectsSlice/asyncThunks'
 import useId from '@mui/material/utils/useId'
 import { openModal } from '@/store/reducers/ModalSlice/ModalSlice'
 import CreateTasksModal from '@/components/Modals/CreateTasksModal'
+import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded'
+import { ConfirmationModal } from '@/components/Modals/ConfirmationModal'
+import { enqueueSnackbar } from '@/store/reducers/NotificationsSlice/NotificationsSlice'
+import { uniqueId } from 'lodash'
+import { SNACKBAR_TYPES } from '@/types/notistack'
+import { useRouter } from 'next/navigation'
 const Project: React.FC<{ id: string; serverTasks: ITaskWithPagination }> = ({
   id,
   serverTasks,
@@ -22,6 +28,7 @@ const Project: React.FC<{ id: string; serverTasks: ITaskWithPagination }> = ({
   const tasksData = tasks?.data ?? []
   const tasksPagination = tasks?.meta?.pagination
   const dispatch = useTypedDispatch()
+  const router = useRouter()
   const onPaginationChange = useCallback(
     (pageNumber: number, rowsPerPage: number) => {
       dispatch(
@@ -33,6 +40,31 @@ const Project: React.FC<{ id: string; serverTasks: ITaskWithPagination }> = ({
   useEffect(() => {
     dispatch(setTasks({ project_id: +id, tasks: serverTasks }))
   }, [])
+  const applyCb = useCallback(
+    (props: CellContext<ITask, unknown>) => () => {
+      dispatch(deleteTask({ projectId: id, taskId: props.row.getValue('id') }))
+        .unwrap()
+        .then((res) => {
+          router.refresh()
+          dispatch(
+            getTasksByProject({
+              projectId: id,
+              params: { page: 1, per_page: 10 },
+            })
+          )
+          dispatch(
+            enqueueSnackbar({
+              message: res.message,
+              options: {
+                key: uniqueId(),
+                variant: SNACKBAR_TYPES.SUCCESS,
+              },
+            })
+          )
+        })
+    },
+    []
+  )
   const columns = React.useMemo<ColumnDef<ITask>[]>(
     () => [
       { header: 'ID', accessorKey: 'id' },
@@ -58,9 +90,26 @@ const Project: React.FC<{ id: string; serverTasks: ITaskWithPagination }> = ({
       {
         header: 'Actions',
         id: 'actions',
-        cell: (/* props */) => (
+        cell: (props) => (
           <div>
-            <Button variant="contained">ACTION</Button>
+            <IconButton
+              onClick={() =>
+                dispatch(
+                  openModal(
+                    ConfirmationModal({
+                      applyCb: applyCb(props),
+                      text: 'Are you sure you want to delete this task?',
+                      title: 'Delete task',
+                      deleteFunc: 'projects/deleteTask',
+                    })
+                  )
+                )
+              }
+              aria-label="delete"
+              size="large"
+            >
+              <DeleteRoundedIcon fontSize="inherit" />
+            </IconButton>
           </div>
         ),
       },

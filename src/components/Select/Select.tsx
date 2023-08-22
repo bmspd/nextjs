@@ -12,11 +12,11 @@ export interface DropDownOption {
   label: string
 }
 // TODO: insert error notification inside this component
-const Select: React.FC<ISelectProps> = (props) => {
+const Select = React.forwardRef<HTMLDivElement, ISelectProps>((props, ref) => {
   const { placeholder, options, ...rest } = props
   const labelId = useId()
   return (
-    <FormControl fullWidth>
+    <FormControl ref={ref} fullWidth>
       <InputLabel id={labelId}>{placeholder}</InputLabel>
       <MuiSelect labelId={labelId} label={placeholder} {...rest}>
         {options.map((option, index) => (
@@ -27,6 +27,7 @@ const Select: React.FC<ISelectProps> = (props) => {
       </MuiSelect>
     </FormControl>
   )
-}
+})
 
+Select.displayName = 'Select'
 export default Select

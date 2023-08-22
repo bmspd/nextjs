@@ -12,5 +12,10 @@ export const createTaskSchema = yup.object({
     .transform((value) => (!!value ? value : null)),
   status: yup.mixed<TASK_STATUSES>().oneOf(Object.values(TASK_STATUSES)).required(),
   priority: yup.mixed<TASK_PRIORITIES>().oneOf(Object.values(TASK_PRIORITIES)).required(),
-  executor_id: yup.number().required(),
+  executor: yup
+    .object({
+      id: yup.number().required(),
+    })
+    .default(null)
+    .required(),
 })

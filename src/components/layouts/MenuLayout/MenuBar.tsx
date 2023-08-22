@@ -6,12 +6,17 @@ import DefaultMenuItem from '@/components/MenuItem/DefaultMenuItem'
 import cn from 'classnames'
 import { useTypedSelector } from '@/hooks/typedStoreHooks'
 import { selectMenuBarCollapsed } from '@/store/reducers/InterfaceSlice/selectors'
-import AccountCircleIcon from '@mui/icons-material/AccountCircle'
 import HomeRoundedIcon from '@mui/icons-material/HomeRounded'
+import FormatListBulletedRoundedIcon from '@mui/icons-material/FormatListBulletedRounded'
+import PushPinRoundedIcon from '@mui/icons-material/PushPinRounded'
 const menuItems = [
   { title: '', iconComponent: <HomeRoundedIcon fontSize="large" />, href: '.' },
-  { title: 'Projects', iconComponent: <AccountCircleIcon fontSize="large" />, href: 'projects' },
-  { title: 'Notes', iconComponent: <AccountCircleIcon fontSize="large" /> },
+  {
+    title: 'Projects',
+    iconComponent: <FormatListBulletedRoundedIcon fontSize="large" />,
+    href: 'projects',
+  },
+  { title: 'Notes', iconComponent: <PushPinRoundedIcon fontSize="large" /> },
 ]
 const MenuBar: React.FC = () => {
   const collapsed = useTypedSelector(selectMenuBarCollapsed)

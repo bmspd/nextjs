@@ -4,7 +4,7 @@ import { createQueryParams } from '@/utils/createQueryParams'
 import { ITaskWithPagination } from '@/http/services/TaskService'
 
 export default async function Page({ params }: { params: { id: string } }) {
-  const defParams = { page: '1', per_page: '2' }
+  const defParams = { page: '1', per_page: '10' }
   const serializedTasks = await serverSideRequest<ITaskWithPagination>({
     url: `projects/${params.id}/tasks` + createQueryParams(defParams),
   })

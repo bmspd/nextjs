@@ -85,7 +85,7 @@ const Table: TableComponent = ({ data, columns, pagination, onPaginationChange }
       </TableContainer>
       {!!pagination && (
         <TablePagination
-          rowsPerPageOptions={[10, 20, 30, 2]}
+          rowsPerPageOptions={[10, 20, 30]}
           component="div"
           rowsPerPage={pageSize}
           page={pageIndex}
