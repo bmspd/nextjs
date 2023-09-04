@@ -1,0 +1,9 @@
+.imgDark:global(.light) {
+  display: none;
+}
+.imgDark:global(.dark){
+  display: unset;
+}
+.imgLight:global(.dark) {
+  display: none;
+}

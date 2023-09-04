@@ -1,4 +1,5 @@
 @import 'variables.scss';
+@import 'colors';
 html {
   height: 100%;
 }
@@ -16,9 +17,15 @@ body {
   position: relative;
 }
 main {
-  background-color: #ddd;
   flex-grow: 1;
   padding: $default-padding $main-side-padding $default-padding 0;
   word-break: break-all;
   overflow-x: hidden;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus, 
+input:-webkit-autofill:active{
+    -webkit-box-shadow: 0 0 0 30px white inset !important;
 }

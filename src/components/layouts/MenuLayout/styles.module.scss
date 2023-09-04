@@ -4,7 +4,6 @@
   position: sticky;
   top: 0;
   height: $header-height;
-  background-color: white;
   width: 100%;
   box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
   .menuHeaderContent {
@@ -15,7 +14,8 @@
     padding: $step * 3 $main-side-padding;
     .contentLeftSide {
       display: flex;
-      gap: $step * 2;
+      align-items: center;
+      gap: $step * 3;
     }
   }
   > div {
@@ -25,8 +25,10 @@
   }
 }
 
-.headerProfile {
-
+.contentRightSide {
+  display: flex;
+  gap: $step * 2;
+  align-items: center;
 }
 .menuAndMain {
   height: calc(100% - #{$header-height});
@@ -42,7 +44,6 @@
   padding: $default-padding $main-side-padding;
   width: 250px;
   flex-shrink: 0;
-  background-color: #ddd;
   transition: width 700ms;
   overflow: hidden;
   &Collapsed {

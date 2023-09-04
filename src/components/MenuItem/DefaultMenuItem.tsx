@@ -26,7 +26,12 @@ const DefaultMenuItem = React.forwardRef<HTMLLIElement, DefaultMenuItemProps>((p
       {...rest}
     >
       <ListItemIcon>{iconComponent}</ListItemIcon>
-      <ListItemText {...ListItemTextProps} />
+      <ListItemText
+        sx={{
+          color: (theme) => (theme.palette.mode === 'light' ? theme.palette.text.primary : 'white'),
+        }}
+        {...ListItemTextProps}
+      />
     </MenuItem>
   )
 })

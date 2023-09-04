@@ -1,7 +1,13 @@
 @import '../../styles/variables';
+.controlPanel {
+  margin-bottom: $step * 2; 
+}
+.logInWrapper {
+  padding: $step * 10;
+}
 .logInContainer {
   margin: 0 auto;
-  padding: 50px;
+  padding: $step * 4;
   width: 700px;
   form {
     display: flex;

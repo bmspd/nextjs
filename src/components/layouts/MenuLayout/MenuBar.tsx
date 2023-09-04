@@ -1,7 +1,7 @@
 'use client'
-import React from 'react'
+import React, { useMemo } from 'react'
 import styles from './styles.module.scss'
-import { MenuList } from '@mui/material'
+import { Box, MenuList } from '@mui/material'
 import DefaultMenuItem from '@/components/MenuItem/DefaultMenuItem'
 import cn from 'classnames'
 import { useTypedSelector } from '@/hooks/typedStoreHooks'
@@ -9,19 +9,46 @@ import { selectMenuBarCollapsed } from '@/store/reducers/InterfaceSlice/selector
 import HomeRoundedIcon from '@mui/icons-material/HomeRounded'
 import FormatListBulletedRoundedIcon from '@mui/icons-material/FormatListBulletedRounded'
 import PushPinRoundedIcon from '@mui/icons-material/PushPinRounded'
-const menuItems = [
-  { title: '', iconComponent: <HomeRoundedIcon fontSize="large" />, href: '.' },
+import { usePathname } from 'next/navigation'
+import { startsWith } from 'lodash'
+const getMenuItems = (pathname: string) => [
+  {
+    title: '',
+    iconComponent: (
+      <HomeRoundedIcon color={pathname === '/' ? 'primary' : 'action'} fontSize="large" />
+    ),
+    href: '.',
+  },
   {
     title: 'Projects',
-    iconComponent: <FormatListBulletedRoundedIcon fontSize="large" />,
+    iconComponent: (
+      <FormatListBulletedRoundedIcon
+        color={startsWith(pathname, '/projects') ? 'primary' : 'action'}
+        fontSize="large"
+      />
+    ),
     href: 'projects',
   },
-  { title: 'Notes', iconComponent: <PushPinRoundedIcon fontSize="large" /> },
+  {
+    title: 'Notes',
+    iconComponent: (
+      <PushPinRoundedIcon
+        color={startsWith(pathname, '/notes') ? 'primary' : 'action'}
+        fontSize="large"
+      />
+    ),
+    href: 'notes',
+  },
 ]
 const MenuBar: React.FC = () => {
+  const pathname = usePathname()
+  const menuItems = useMemo(() => getMenuItems(pathname), [pathname])
   const collapsed = useTypedSelector(selectMenuBarCollapsed)
   return (
-    <div className={cn(styles.menuBar, collapsed && styles.menuBarCollapsed)}>
+    <Box
+      sx={{ bgcolor: (theme) => theme.palette.background.default }}
+      className={cn(styles.menuBar, collapsed && styles.menuBarCollapsed)}
+    >
       <MenuList disablePadding>
         {menuItems.map((item) => (
           <DefaultMenuItem
@@ -33,7 +60,7 @@ const MenuBar: React.FC = () => {
           />
         ))}
       </MenuList>
-    </div>
+    </Box>
   )
 }
 

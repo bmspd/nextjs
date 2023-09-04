@@ -1,5 +1,6 @@
 @import '../../../styles/variables';
 .defaultTextFieldWrapper {
+  padding-top: $step;
   display: flex;
   flex-direction: column;
   gap: #{$step * 2};

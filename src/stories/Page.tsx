@@ -1,14 +1,15 @@
-import React from 'react';
+/* eslint-disable react/no-unescaped-entities */
+import React from 'react'
 
-import { Header } from './Header';
-import './page.css';
+import { Header } from './Header'
+import './page.css'
 
 type User = {
-  name: string;
-};
+  name: string
+}
 
 export const Page: React.FC = () => {
-  const [user, setUser] = React.useState<User>();
+  const [user, setUser] = React.useState<User>()
 
   return (
     <article>
@@ -69,5 +70,5 @@ export const Page: React.FC = () => {
         </div>
       </section>
     </article>
-  );
-};
+  )
+}

@@ -1,0 +1,158 @@
+// light mode
+//primary
+$light-primary-main: #2c91e5;
+$light-primary-light: #66afec;
+$light-primary-dark: #0f4a7b;
+$light-primary-contrastText: #ffffff;
+//secondary
+$light-secondary-main: #3bb2c4;
+$light-secondary-light: #74c9d5;
+$light-secondary-dark: #2b808d;
+$light-secondary-contrastText: #ffffff;
+//success
+$light-success-main: #298d50;
+$light-success-light: #30a55d;
+$light-success-dark: #217140;
+$light-success-contrastText: #ffffff;
+//error
+$light-error-main: #e1261e;
+$light-error-light: #e54740;
+$light-error-dark: #b21e18;
+$light-error-contrastText: #ffffff;
+//warning
+$light-warning-main: #fb8d04;
+$light-warning-light: #fca130;
+$light-warning-dark: #da7a03;
+$light-warning-contrastText: #ffffff;
+//info
+$light-info-main: #2e22fd;
+$light-info-light: #4c42fd;
+$light-info-dark: #0d02ce;
+$light-info-contrastText: #ffffff;
+//background
+$light-background-default: #ffffff;
+$light-background-paper: #ffffff;
+
+
+// dark mode
+//primary
+$dark-primary-main: #974ec3;
+$dark-primary-light: #b079d2;
+$dark-primary-dark: #713397;
+$dark-primary-contrastText: #ffffff;
+//secondary
+$dark-secondary-main: #30b0ae;
+$dark-secondary-light: #42cbc9;
+$dark-secondary-dark: #1d6968 ;
+$dark-secondary-contrastText: #ffffff;
+//success
+$dark-success-main: #34cb51;
+$dark-success-light: #50e082;
+$dark-success-dark: #1a9243;
+$dark-success-contrastText: #000000DE;
+//error
+$dark-error-main: #e1424b;
+$dark-error-light: #e86d74;
+$dark-error-dark: #c71f28;
+$dark-error-contrastText: #ffffff;
+//warning
+$dark-warning-main: #f88b0b;
+$dark-warning-light: #faaf56;
+$dark-warning-dark: #cc7005;
+$dark-warning-contrastText: #000000DE;
+//info
+$dark-info-main: #72a2b6;
+$dark-info-light: #81adbe;
+$dark-info-dark: #51879d;
+$dark-info-contrastText: #ffffff;
+//background
+$dark-background-default: #16181d  ;
+$dark-background-paper: #040952;
+
+// forming as "light-primary-main"
+:export {
+  light: {
+    primary: {
+      main: $light-primary-main;
+      light: $light-primary-light;
+      dark: $light-primary-dark;
+      contrasttext: $light-primary-contrastText;
+    }
+    secondary: {
+      main: $light-secondary-main;
+      light: $light-secondary-light;
+      dark: $light-secondary-dark;
+      contrasttext: $light-secondary-contrastText;
+    }
+    success: {
+      main: $light-success-main;
+      light: $light-success-light;
+      dark: $light-success-dark;
+      contrasttext: $light-success-contrastText;
+    }
+    error: {
+      main: $light-error-main;
+      light: $light-error-light;
+      dark: $light-error-dark;
+      contrasttext: $light-error-contrastText;
+    }
+    warning: {
+      main: $light-warning-main;
+      light: $light-warning-light;
+      dark: $light-warning-dark;
+      contrasttext: $light-warning-contrastText;
+    }
+    info: {
+      main: $light-info-main;
+      light: $light-info-light;
+      dark: $light-info-dark;
+      contrasttext: $light-info-contrastText;
+    }
+    background: {
+      default: $light-background-default;
+      paper: $light-background-paper;
+    }
+  }
+  dark: {
+    primary: {
+      main: $dark-primary-main;
+      light: $dark-primary-light;
+      dark: $dark-primary-dark;
+      contrasttext: $dark-primary-contrastText;
+    }
+    secondary: {
+      main: $dark-secondary-main;
+      light: $dark-secondary-light;
+      dark: $dark-secondary-dark;
+      contrasttext: $dark-secondary-contrastText;
+    }
+    success: {
+      main: $dark-success-main;
+      light: $dark-success-light;
+      dark: $dark-success-dark;
+      contrasttext: $dark-success-contrastText;
+    }
+    error: {
+      main: $dark-error-main;
+      light: $dark-error-light;
+      dark: $dark-error-dark;
+      contrasttext: $dark-error-contrastText;
+    }
+    warning: {
+      main: $dark-warning-main;
+      light: $dark-warning-light;
+      dark: $dark-warning-dark;
+      contrastext: $dark-warning-contrastText;
+    }
+    info: {
+      main: $dark-info-main;
+      light: $dark-info-light;
+      dark: $dark-info-dark;
+      contrasttext: $dark-info-contrastText;
+    }
+    background: {
+      default: $dark-background-default;
+      paper: $dark-background-paper;
+    }
+  }
+}

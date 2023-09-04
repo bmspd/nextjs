@@ -1,9 +1,8 @@
 import React from 'react'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
-import styles from './styles.module.scss'
 import DefaultTextField from '../Inputs/DefaultTextField/DefaultTextField'
 import PasswordTextField from '../Inputs/PasswordTextField/PasswordTextField'
-import { Button } from '@mui/material'
+import { Button, Typography } from '@mui/material'
 import DefaultAlert from '../Alerts/DefaultAlert'
 import Link from 'next/link'
 import { yupResolver } from '@hookform/resolvers/yup'
@@ -11,6 +10,7 @@ import { logInSchema } from '@/validation/login.validation'
 import { useTypedDispatch } from '@/hooks/typedStoreHooks'
 import { signIn } from '@/store/reducers/AuthSlice/asyncThunks'
 import { SignInResponse } from 'next-auth/react'
+import LoginWrapper from './LoginWrapper'
 
 interface ILogInForm {
   username: string
@@ -38,7 +38,7 @@ const LoginView: React.FC<{ reset?: () => void }> = ({ reset }) => {
     else if (reset) reset()
   }
   return (
-    <div className={styles.logInContainer}>
+    <LoginWrapper>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Button
           variant="contained"
@@ -72,7 +72,7 @@ const LoginView: React.FC<{ reset?: () => void }> = ({ reset }) => {
             />
           )}
         />
-        <Button type="submit" variant="contained">
+        <Button type="submit" variant="contained" color="primary">
           Log in
         </Button>
         <DefaultAlert
@@ -81,13 +81,13 @@ const LoginView: React.FC<{ reset?: () => void }> = ({ reset }) => {
           isOpen={!!errors.root?.serverError?.message}
         />
       </form>
-      <p>
+      <Typography sx={{ color: (theme) => theme.palette.text.primary }}>
         <Link className="default-link" href="sign-up">
           Sign up
         </Link>
         , if you has not registered yet
-      </p>
-    </div>
+      </Typography>
+    </LoginWrapper>
   )
 }
 

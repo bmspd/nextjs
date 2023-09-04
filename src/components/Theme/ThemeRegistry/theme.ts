@@ -1,29 +1,38 @@
 'use client'
 
-import { createTheme, ThemeOptions } from '@mui/material/styles'
+import { ThemeMode } from '@/store/reducers/InterfaceSlice/InterfaceSlice'
+import { red } from '@mui/material/colors'
+import { createTheme, PaletteOptions, ThemeOptions } from '@mui/material/styles'
+import { lightMode } from './light-theme'
+import { darkMode } from './dark-theme'
+const { palette } = createTheme()
 
-//import GoogleInterFont from '@/app/fonts/fonts'
-
-// When needed::: first argument is needed if you have common enterprise theme, and second argument is to override your enterprise theme.
-// apply fonts to all other typography options like headings, subtitles, etc...
-const defaultTheme = createTheme(
-  {
-    /*typography: {
-      fontFamily: GoogleInterFont.style.fontFamily,
-      body1: { fontFamily: GoogleInterFont.style.fontFamily },
-      body2: { fontFamily: GoogleInterFont.style.fontFamily },
-    },*/
-    components: {
-      MuiDialog: {
-        styleOverrides: {
-          paper: {
-            minWidth: 600,
-            maxWidth: 800,
+const defaultPallete: PaletteOptions = {
+  mainColor: palette.augmentColor({
+    color: {
+      main: red[400],
+    },
+    name: 'mainColor',
+  }),
+}
+const theme = (mode: ThemeMode) =>
+  createTheme(
+    {
+      palette: {
+        ...defaultPallete,
+        ...(mode === 'dark' ? darkMode : lightMode),
+      },
+      components: {
+        MuiDialog: {
+          styleOverrides: {
+            paper: {
+              minWidth: 600,
+              maxWidth: 800,
+            },
           },
         },
       },
     },
-  },
-  {} as ThemeOptions
-)
-export default defaultTheme
+    {} as ThemeOptions
+  )
+export default theme
