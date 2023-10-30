@@ -12,11 +12,16 @@ import { Button } from '@mui/material'
 import { uniqueId } from 'lodash'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 import DefaultTextField from '../Inputs/DefaultTextField/DefaultTextField'
+import styles from './style.module.scss'
+import ImageUpload from '../Image/ImageUpload/ImageUpload'
+import { useState } from 'react'
 
 const Content: React.FC<{ formId: string | undefined; handleClose: () => void }> = ({
   formId,
   handleClose,
 }) => {
+  const filesState = useState<File[]>([])
+  const [files] = filesState
   const dispatch = useTypedDispatch()
   const {
     control,
@@ -27,6 +32,9 @@ const Content: React.FC<{ formId: string | undefined; handleClose: () => void }>
     resolver: yupResolver(createProjectSchema),
   })
   const onSubmit: SubmitHandler<CreateProjectBody> = async (data) => {
+    if (files.length) {
+      data['image'] = files[0]
+    }
     await dispatch(createProject(data))
       .unwrap()
       .then(() => {
@@ -43,7 +51,7 @@ const Content: React.FC<{ formId: string | undefined; handleClose: () => void }>
     handleClose()
   }
   return (
-    <form id={formId} onSubmit={handleSubmit(onSubmit)}>
+    <form className={styles.createProjectModal} id={formId} onSubmit={handleSubmit(onSubmit)}>
       <Controller
         name="name"
         control={control}
@@ -59,6 +67,7 @@ const Content: React.FC<{ formId: string | undefined; handleClose: () => void }>
           />
         )}
       />
+      <ImageUpload filesState={filesState} />
     </form>
   )
 }

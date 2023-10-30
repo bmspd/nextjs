@@ -1,25 +1,41 @@
 'use client'
-import React, { useEffect } from 'react'
+import React, { useEffect, useId } from 'react'
 import MainBlock from '@/components/Blocks/MainBlock'
 import { useTypedDispatch, useTypedSelector } from '@/hooks/typedStoreHooks'
-import { selectProjects } from '@/store/reducers/ProjectsSlice/selectors'
+import { selectProjectLogos, selectProjects } from '@/store/reducers/ProjectsSlice/selectors'
 import { Button } from '@mui/material'
 import { openModal } from '@/store/reducers/ModalSlice/ModalSlice'
 import { CreateProjectModal } from '@/components/Modals/CreateProjectModal'
-import useId from '@mui/material/utils/useId'
 import { setProjects } from '@/store/reducers/ProjectsSlice/ProjectSlice'
-import { IProject } from '@/http/services/ProjectsService'
+import ProjectsService, { IProject } from '@/http/services/ProjectsService'
 import ProjectCard from './ProjectCard'
 import styles from './styles.module.scss'
-const Projects: React.FC<{ serverProjects: IProject[] }> = ({ serverProjects }) => {
+import { getProjectLogo } from '@/store/reducers/ProjectsSlice/asyncThunks'
+const Projects: React.FC<{ serverProjects: IProject[]; raw: Response }> = (
+  {
+    /*serverProjects, raw*/
+  }
+) => {
   const projects = useTypedSelector(selectProjects)
+  const logos = useTypedSelector(selectProjectLogos)
   const dispatch = useTypedDispatch()
   const formId = useId()
   useEffect(() => {
-    dispatch(setProjects(serverProjects))
+    // next js кэширует как урод, надо на сервер сайде править, пока так
+    ProjectsService.getProjects().then((res) => {
+      const { payload } = dispatch(setProjects(res.data))
+      payload.forEach((el, index) => {
+        if (el.logo) {
+          // посмотреть есть ли уже загруженное лого, сравниваю id, в случае если вдруг поменялось кол-во проектов
+          if (projects[index]?.id === el.id && logos[el.id]?.imgSource) return
+          dispatch(getProjectLogo({ id: el.id }))
+        }
+      })
+    })
   }, [])
   return (
     <div>
+      {JSON.stringify(projects.map((el) => el.name))}
       <MainBlock>
         <Button
           variant="contained"

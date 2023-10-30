@@ -87,6 +87,7 @@ const LoginView: React.FC<{ reset?: () => void }> = ({ reset }) => {
         </Link>
         , if you has not registered yet
       </Typography>
+      {}
     </LoginWrapper>
   )
 }

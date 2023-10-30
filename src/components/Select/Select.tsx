@@ -1,7 +1,6 @@
 'use client'
 import { FormControl, InputLabel, MenuItem, Select as MuiSelect, SelectProps } from '@mui/material'
-import useId from '@mui/material/utils/useId'
-import React from 'react'
+import React, { useId } from 'react'
 
 export interface ISelectProps extends Omit<SelectProps, 'label' | 'labelId'> {
   placeholder: string

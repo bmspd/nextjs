@@ -4,3 +4,8 @@
   flex-direction: column;
   gap: $step * 3
 }
+.createProjectModal {
+  display: flex;
+  flex-direction: column;
+  gap: $step * 3;
+}

@@ -18,7 +18,9 @@ const refreshToken = async (refreshToken: string): Promise<string> => {
   const data = await result.json()
   return data?.accessToken
 }
-type TServerSideRequest = <T>(data: ServerSideReqData) => Promise<T>
+type TServerSideRequest = <T>(
+  data: ServerSideReqData
+) => Promise<{ serialized: T; response: Response }>
 export const serverSideRequest: TServerSideRequest = async (data) => {
   const session = await getServerSession(authConfig)
   const baseURL = process.env.NEXT_PUBLIC_BACKEND_BASEURL
@@ -28,7 +30,11 @@ export const serverSideRequest: TServerSideRequest = async (data) => {
     cache: data.cache,
     headers: { Authorization: `Bearer ${session?.tokens?.accessToken}` },
   })
-  if (reqData.ok) return reqData.json()
+  if (reqData.ok)
+    return {
+      serialized: await reqData.json(),
+      response: reqData,
+    }
   if (reqData.status === 401) {
     const rToken = session?.tokens?.refreshToken
     if (!rToken) throw new Error(ERRORS.ANAUTHORIZED)
@@ -39,7 +45,10 @@ export const serverSideRequest: TServerSideRequest = async (data) => {
       headers: { Authorization: `Bearer ${newToken}` },
     })
     if (!newReqData.ok) throw new Error(ERRORS.ANAUTHORIZED)
-    return newReqData.json()
+    return {
+      serialized: await newReqData.json(),
+      response: newReqData,
+    }
   } else if (reqData.status === 404) {
     throw new Error(ERRORS.NOT_FOUND)
   } else {

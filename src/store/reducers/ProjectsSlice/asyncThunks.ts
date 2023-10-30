@@ -1,6 +1,8 @@
 import { tryCatch } from '@/decorators'
 import ProjectsService, {
   CreateProjectBody,
+  DeleteProjectBody,
+  GetProjectLogoBody,
   IProject,
   IUserInProjectWithPagination,
 } from '@/http/services/ProjectsService'
@@ -15,7 +17,23 @@ export const createProject = createAsyncThunk(
     return response.data
   })
 )
-
+export const deleteProject = createAsyncThunk(
+  'projects/deleteProject',
+  tryCatch<DeleteProjectBody>(async (data) => {
+    const response = await ProjectsService.deleteProject(data)
+    return response.data
+  })
+)
+export const getProjectLogo = createAsyncThunk(
+  'projects/getProjectLogo',
+  tryCatch<GetProjectLogoBody, string>(async (data) => {
+    const response = await ProjectsService.getProjectLogo(data)
+    const file = new File([response.data], `logo-${data.id}`, {
+      type: response.headers['content-type'],
+    })
+    return URL.createObjectURL(file)
+  })
+)
 export const getTasksByProject = createAsyncThunk(
   'projects/getTasksByProject',
   tryCatch<{ projectId: number | string; params: PaginationParams }, ITaskWithPagination>(

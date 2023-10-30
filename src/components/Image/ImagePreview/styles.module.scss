@@ -1,0 +1,19 @@
+@import "../../../styles//variables";
+.imagePreview {
+  width: 150px;
+  height: 150px;
+  position: relative;
+  border: 1px solid lightgrey;
+  border-radius: 6px;
+  cursor: pointer;
+  img {
+    object-fit: cover;
+    overflow: hidden;
+    border-radius: 6px;
+  }
+}
+.removeImage {
+  right: 0;
+  top: 0;
+  z-index: 1;
+}

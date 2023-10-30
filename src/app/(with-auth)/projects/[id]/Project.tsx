@@ -1,16 +1,19 @@
 'use client'
-import React, { useEffect, useCallback } from 'react'
+import React, { useEffect, useCallback, useId } from 'react'
 import MainBlock from '@/components/Blocks/MainBlock'
 import { useTypedDispatch, useTypedSelector } from '@/hooks/typedStoreHooks'
 import { ITask, ITaskWithPagination } from '@/http/services/TaskService'
-import { setTasks } from '@/store/reducers/ProjectsSlice/ProjectSlice'
+import { deleteProjectById, setTasks } from '@/store/reducers/ProjectsSlice/ProjectSlice'
 import { selectTasksByProject } from '@/store/reducers/ProjectsSlice/selectors'
 import { CellContext, ColumnDef } from '@tanstack/react-table'
 import Table from '@/components/Table/Table'
 import { Button, IconButton } from '@mui/material'
 import NextLink from 'next/link'
-import { deleteTask, getTasksByProject } from '@/store/reducers/ProjectsSlice/asyncThunks'
-import useId from '@mui/material/utils/useId'
+import {
+  deleteProject,
+  deleteTask,
+  getTasksByProject,
+} from '@/store/reducers/ProjectsSlice/asyncThunks'
 import { openModal } from '@/store/reducers/ModalSlice/ModalSlice'
 import CreateTasksModal from '@/components/Modals/CreateTasksModal'
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded'
@@ -39,6 +42,23 @@ const Project: React.FC<{ id: string; serverTasks: ITaskWithPagination }> = ({
   )
   useEffect(() => {
     dispatch(setTasks({ project_id: +id, tasks: serverTasks }))
+  }, [])
+  const deleteProjectCb = useCallback(() => {
+    dispatch(deleteProject({ id: +id }))
+      .unwrap()
+      .then((res) => {
+        dispatch(deleteProjectById(+id))
+        router.push('/projects', {})
+        dispatch(
+          enqueueSnackbar({
+            message: res.message,
+            options: {
+              key: uniqueId(),
+              variant: SNACKBAR_TYPES.SUCCESS,
+            },
+          })
+        )
+      })
   }, [])
   const applyCb = useCallback(
     (props: CellContext<ITask, unknown>) => () => {
@@ -120,13 +140,31 @@ const Project: React.FC<{ id: string; serverTasks: ITaskWithPagination }> = ({
     <>
       <MainBlock sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>PROJECT {id}</div>
-        <Button
-          onClick={() => {
-            dispatch(openModal(CreateTasksModal(formId)))
-          }}
-        >
-          Create Task
-        </Button>
+        <div>
+          <Button
+            color="error"
+            onClick={() => {
+              dispatch(
+                openModal(
+                  ConfirmationModal({
+                    applyCb: deleteProjectCb,
+                    title: 'Delete project',
+                    text: 'Are you sure you want to delete this project?',
+                  })
+                )
+              )
+            }}
+          >
+            Delete Project
+          </Button>
+          <Button
+            onClick={() => {
+              dispatch(openModal(CreateTasksModal(formId)))
+            }}
+          >
+            Create Task
+          </Button>
+        </div>
       </MainBlock>
       <MainBlock sx={{ marginTop: 4 }}>
         <Table<ITask>
