@@ -2,7 +2,9 @@
 import React from 'react'
 import { Provider } from 'react-redux'
 import { store } from './index'
+import { LocalStorage } from '@/utils/localStorage'
 const StoreProvider = ({ children }: { children: React.ReactNode }) => {
+  LocalStorage.init()
   return <Provider store={store}>{children}</Provider>
 }
 export default StoreProvider

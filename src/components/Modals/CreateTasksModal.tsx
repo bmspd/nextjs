@@ -57,7 +57,7 @@ const Content: React.FC<{ formId: string | undefined; handlelose: () => void }> 
   const onSubmit: SubmitHandler<ICreateTaskForm> = async (data) => {
     const { executor, ...rest } = data
     await dispatch(
-      createTask({ projectId: params.id, body: { ...rest, executor_id: executor.id } })
+      createTask({ projectId: params.id as string, body: { ...rest, executor_id: executor.id } })
     )
       .unwrap()
       .then(() => {
@@ -72,7 +72,7 @@ const Content: React.FC<{ formId: string | undefined; handlelose: () => void }> 
         )
         dispatch(
           getTasksByProject({
-            projectId: params.id,
+            projectId: params.id as string,
             params: { page: 1, per_page: tasks.meta.pagination.per_page },
           })
           // need to invalidate cache from tasks

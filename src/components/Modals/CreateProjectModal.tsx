@@ -4,7 +4,7 @@ import { CreateProjectBody } from '@/http/services/ProjectsService'
 import { selectSpecificLoading } from '@/store/reducers/LoadingSlice/selectors'
 import { DialogModalProps } from '@/store/reducers/ModalSlice/ModalSlice'
 import { enqueueSnackbar } from '@/store/reducers/NotificationsSlice/NotificationsSlice'
-import { createProject } from '@/store/reducers/ProjectsSlice/asyncThunks'
+import { createProject, getProjectLogo } from '@/store/reducers/ProjectsSlice/asyncThunks'
 import { SNACKBAR_TYPES } from '@/types/notistack'
 import { createProjectSchema } from '@/validation/project.validations'
 import { yupResolver } from '@hookform/resolvers/yup'
@@ -37,7 +37,8 @@ const Content: React.FC<{ formId: string | undefined; handleClose: () => void }>
     }
     await dispatch(createProject(data))
       .unwrap()
-      .then(() => {
+      .then((res) => {
+        if (res.logo_id) dispatch(getProjectLogo({ id: res.id }))
         dispatch(
           enqueueSnackbar({
             message: 'New project was created',

@@ -48,7 +48,7 @@ const Project: React.FC<{ id: string; serverTasks: ITaskWithPagination }> = ({
       .unwrap()
       .then((res) => {
         dispatch(deleteProjectById(+id))
-        router.push('/projects', {})
+        router.push('/projects')
         dispatch(
           enqueueSnackbar({
             message: res.message,

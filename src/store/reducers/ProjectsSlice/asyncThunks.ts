@@ -12,7 +12,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit'
 
 export const createProject = createAsyncThunk(
   'projects/createProject',
-  tryCatch<CreateProjectBody, IProject>(async (data) => {
+  tryCatch<CreateProjectBody, Omit<IProject, 'logo'> & { logo_id?: number }>(async (data) => {
     const response = await ProjectsService.createProject(data)
     return response.data
   })

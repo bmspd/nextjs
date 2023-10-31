@@ -9,17 +9,20 @@ import {
 } from './asyncThunks'
 import { ITaskWithPagination } from '@/http/services/TaskService'
 import { merge } from 'lodash'
+import moment from 'moment'
 type InitialState = {
   projects: IProject[]
   usersByProject: Record<number, IUserInProjectWithPagination>
   tasksByProject: Record<number, ITaskWithPagination>
   logos: Record<number, { id: number; imgSource: string }>
+  preloaded: Record<string, string>
 }
 const initialState: InitialState = {
   projects: [],
   logos: {},
   usersByProject: {},
   tasksByProject: {},
+  preloaded: {},
 }
 
 const ProjectsSlice = createSlice({
@@ -27,6 +30,7 @@ const ProjectsSlice = createSlice({
   initialState,
   reducers: {
     setProjects: (state, action: PayloadAction<IProject[]>) => {
+      state.preloaded['projects'] = moment().format()
       state.projects = action.payload
     },
     deleteProjectById: (state, action: PayloadAction<number>) => {
@@ -44,7 +48,7 @@ const ProjectsSlice = createSlice({
     builder
       .addCase(createProject.fulfilled, (state, action) => {
         const { payload } = action
-        state.projects.unshift(payload)
+        state.projects.unshift(payload as IProject)
       })
 
       .addCase(deleteTask.fulfilled, (state, action) => {

@@ -17,7 +17,7 @@ const getMenuItems = (pathname: string) => [
     iconComponent: (
       <HomeRoundedIcon color={pathname === '/' ? 'primary' : 'action'} fontSize="large" />
     ),
-    href: '.',
+    href: '/',
   },
   {
     title: 'Projects',
@@ -27,7 +27,7 @@ const getMenuItems = (pathname: string) => [
         fontSize="large"
       />
     ),
-    href: 'projects',
+    href: '/projects',
   },
   {
     title: 'Notes',
@@ -37,7 +37,7 @@ const getMenuItems = (pathname: string) => [
         fontSize="large"
       />
     ),
-    href: 'notes',
+    href: '/notes',
   },
 ]
 const MenuBar: React.FC = () => {
