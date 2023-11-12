@@ -12,13 +12,25 @@ export interface IProject {
   id: number
   name: string
   logo: null | ProjectLogo
+  pattern_type: PROJECT_PATTERN_TYPES | null
+  pattern_color: PROJECT_PATTERN_COLORS | null
+}
+export enum PROJECT_PATTERN_TYPES {
+  PLANTS = 'plants',
+}
+export enum PROJECT_PATTERN_COLORS {
+  RED = 'red',
+  GREEN = 'green',
+  BLUE = 'blue',
 }
 export type ProjectLogo = {
   id: number
   original_name: string
   imgSource?: string | null
 }
-export type CreateProjectBody = Omit<IProject, 'id' | 'logo'> & { image?: File }
+export type CreateProjectBody = Omit<IProject, 'id' | 'logo' | 'pattern_type' | 'pattern_color'> & {
+  image?: File
+} & Partial<Pick<IProject, 'pattern_color' | 'pattern_type'>>
 export type DeleteProjectBody = Pick<IProject, 'id'>
 export type InviteUserToProjectBody = { email: string }
 export type GetProjectLogoBody = Pick<IProject, 'id'>

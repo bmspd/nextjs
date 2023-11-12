@@ -28,7 +28,7 @@ const Content: React.FC<{ formId: string | undefined; handleClose: () => void }>
     handleSubmit,
     formState: { errors },
   } = useForm({
-    defaultValues: { name: '' },
+    defaultValues: { name: '', pattern_type: null, pattern_color: null },
     resolver: yupResolver(createProjectSchema),
   })
   const onSubmit: SubmitHandler<CreateProjectBody> = async (data) => {

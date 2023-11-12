@@ -19,7 +19,11 @@
   height: 140px;
   position: relative;
 }
-
+.cardContent {
+  width: auto;
+  backdrop-filter: blur(8px) opacity(80%);
+  border-radius: 8px;
+}
 .projectsViewControls {
   display: flex;
   flex-direction: row;
@@ -28,5 +32,43 @@
   font-size: 4px;
   svg {
     cursor: pointer;
+  }
+}
+
+.cardDefaultStyles {
+  position: relative;
+  &::before {
+    opacity: 0.3;
+    content: '';
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+  }
+}
+.plantPattern {
+  &::before {
+    content: '';
+    background-image: url('../../../../public/assets/images/patterns/plants_pattern.svg');
+    background-size: 300px;
+  }
+}
+.patternRed {
+  &::before {
+    background-color: rgba(255, 0, 0, 0.3);
+    background-blend-mode: overlay;
+  }
+}
+.patternGreen {
+  &::before {
+    background-color: rgba(0, 255, 0, 0.3);
+    background-blend-mode: overlay;
+  }
+}
+.patternBlue {
+  &::before {
+    background-color: rgba(0, 0, 255, 0.3);
+    background-blend-mode: overlay;
   }
 }
