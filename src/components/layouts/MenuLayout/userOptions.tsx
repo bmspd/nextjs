@@ -14,7 +14,7 @@ export const userOptions = (logOutHandler: () => void): DropDownOption[] => [
         <ListItemText primary="Profile" />
       </ListItem>
     ),
-    href: 'profile',
+    href: '/profile',
   },
   {
     element: (
@@ -25,7 +25,7 @@ export const userOptions = (logOutHandler: () => void): DropDownOption[] => [
         <ListItemText primary="Settings" />
       </ListItem>
     ),
-    href: 'settings',
+    href: '/settings',
   },
   { divider: true },
   {

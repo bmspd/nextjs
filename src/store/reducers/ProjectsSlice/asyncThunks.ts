@@ -73,3 +73,13 @@ export const getUsersByProject = createAsyncThunk(
     return response.data
   })
 )
+
+export const inviteUserToProject = createAsyncThunk(
+  'projects/inviteUserToProject',
+  tryCatch<{ projectId: number | string; email: string }>(async (data) => {
+    const response = await ProjectsService.inviteUserToProject(data.projectId, {
+      email: data.email,
+    })
+    return response.data
+  })
+)

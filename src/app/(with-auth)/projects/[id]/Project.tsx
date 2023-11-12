@@ -22,6 +22,8 @@ import { enqueueSnackbar } from '@/store/reducers/NotificationsSlice/Notificatio
 import { uniqueId } from 'lodash'
 import { SNACKBAR_TYPES } from '@/types/notistack'
 import { useRouter } from 'next/navigation'
+import CustomCell, { DefaultCell } from '@/components/Table/CustomCell'
+import InviteUserToProjectModal from '@/components/Modals/InviteUserToProjectModal'
 const Project: React.FC<{ id: string; serverTasks: ITaskWithPagination }> = ({
   id,
   serverTasks,
@@ -87,7 +89,7 @@ const Project: React.FC<{ id: string; serverTasks: ITaskWithPagination }> = ({
   )
   const columns = React.useMemo<ColumnDef<ITask>[]>(
     () => [
-      { header: 'ID', accessorKey: 'id' },
+      { header: 'ID', accessorKey: 'id', cell: DefaultCell },
       {
         header: 'Title',
         accessorKey: 'title',
@@ -96,22 +98,29 @@ const Project: React.FC<{ id: string; serverTasks: ITaskWithPagination }> = ({
           const value = props.getValue<string>()
           // relative path works without projectId D:
           return (
-            <NextLink className="default-link" href={`/projects/${id}/task/${taskId}`}>
-              {value}
-            </NextLink>
+            <CustomCell isDefault>
+              <NextLink className="default-link" href={`/projects/${id}/task/${taskId}`}>
+                {value}
+              </NextLink>
+            </CustomCell>
           )
         },
       },
-      { header: 'Description', accessorKey: 'description' },
-      { header: 'Status', accessorKey: 'status' },
-      { header: 'Priority', accessorKey: 'priority' },
-      { header: 'Creator', accessorKey: 'creator.id' },
-      { header: 'Executor', accessorKey: 'executor.id' },
+      {
+        header: 'Description',
+        accessorKey: 'description',
+
+        cell: (props) => <CustomCell lines={3}>{props.getValue<string>()}</CustomCell>,
+      },
+      { header: 'Status', accessorKey: 'status', cell: DefaultCell },
+      { header: 'Priority', accessorKey: 'priority', cell: DefaultCell },
+      { header: 'Creator', accessorKey: 'creator.id', cell: DefaultCell },
+      { header: 'Executor', accessorKey: 'executor.id', cell: DefaultCell },
       {
         header: 'Actions',
         id: 'actions',
         cell: (props) => (
-          <div>
+          <CustomCell isDefault>
             <IconButton
               onClick={() =>
                 dispatch(
@@ -130,7 +139,7 @@ const Project: React.FC<{ id: string; serverTasks: ITaskWithPagination }> = ({
             >
               <DeleteRoundedIcon fontSize="inherit" />
             </IconButton>
-          </div>
+          </CustomCell>
         ),
       },
     ],
@@ -164,9 +173,16 @@ const Project: React.FC<{ id: string; serverTasks: ITaskWithPagination }> = ({
           >
             Create Task
           </Button>
+          <Button
+            onClick={() => {
+              dispatch(openModal(InviteUserToProjectModal(formId)))
+            }}
+          >
+            Invite user
+          </Button>
         </div>
       </MainBlock>
-      <MainBlock sx={{ marginTop: 4 }}>
+      <MainBlock sx={{ marginTop: 4, padding: 0 }}>
         <Table<ITask>
           data={tasksData}
           columns={columns}

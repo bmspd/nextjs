@@ -20,6 +20,7 @@ export type ProjectLogo = {
 }
 export type CreateProjectBody = Omit<IProject, 'id' | 'logo'> & { image?: File }
 export type DeleteProjectBody = Pick<IProject, 'id'>
+export type InviteUserToProjectBody = { email: string }
 export type GetProjectLogoBody = Pick<IProject, 'id'>
 export default class ProjectsService {
   static async createProject(data: CreateProjectBody): Promise<AxiosResponse> {
@@ -47,5 +48,8 @@ export default class ProjectsService {
     params: PaginationParams
   ): Promise<AxiosResponse> {
     return $api.get<AxiosResponse>(`/projects/${projectId}/users`, { params: params })
+  }
+  static async inviteUserToProject(projectId: string | number, data: InviteUserToProjectBody) {
+    return $api.patch(`/projects/${projectId}/invite`, data)
   }
 }

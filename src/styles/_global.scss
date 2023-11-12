@@ -18,7 +18,7 @@ body {
 }
 main {
   flex-grow: 1;
-  padding: $default-padding $main-side-padding $default-padding 0;
+  padding: $default-padding $main-side-padding $default-padding $step;
   word-break: break-all;
   overflow-x: hidden;
 }

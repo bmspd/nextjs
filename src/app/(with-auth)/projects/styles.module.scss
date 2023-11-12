@@ -1,9 +1,32 @@
 @import '../../../styles/variables';
 
 .projectBoard {
-  display: flex;
-  flex-direction: row;
+  // display: flex;
+  // flex-direction: row;
   gap: $step * 3;
   flex-wrap: wrap;
   margin-top: $step * 4;
+}
+.projectsPageHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.cardMedia {
+  min-width: 140px;
+  min-height: 140px;
+  width: 140px;
+  height: 140px;
+  position: relative;
+}
+
+.projectsViewControls {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: $step;
+  font-size: 4px;
+  svg {
+    cursor: pointer;
+  }
 }

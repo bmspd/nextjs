@@ -2,11 +2,15 @@
 import { LocalStorage } from '@/utils/localStorage'
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 export type ThemeMode = 'dark' | 'light'
+export type TProjectsViewVariants = 'col' | 'double-row' | 'triple-row'
 export type InitialInterfaceState = {
   menuBar: {
     collapsed: boolean
   }
   mode: ThemeMode
+  projects: {
+    view: TProjectsViewVariants
+  }
 }
 
 export const interfaceInitialState: InitialInterfaceState = {
@@ -14,6 +18,9 @@ export const interfaceInitialState: InitialInterfaceState = {
     collapsed: false,
   },
   mode: 'light',
+  projects: {
+    view: 'col',
+  },
 }
 const initWithLS = (): InitialInterfaceState => {
   return LocalStorage.getInterfaceState()
@@ -34,8 +41,13 @@ const InterfaceSlice = createSlice({
       state.mode = state.mode === 'dark' ? 'light' : 'dark'
       LocalStorage.setInterfaceValue('mode', state.mode)
     },
+    setProjectsView: (state, action: PayloadAction<TProjectsViewVariants>) => {
+      state.projects.view = action.payload
+      LocalStorage.setInterfaceValue('projects.view', action.payload)
+    },
   },
 })
 
-export const { setMenuBarCollapsed, toggleMenuBarCollapsed, toggleMode } = InterfaceSlice.actions
+export const { setMenuBarCollapsed, toggleMenuBarCollapsed, toggleMode, setProjectsView } =
+  InterfaceSlice.actions
 export default InterfaceSlice.reducer

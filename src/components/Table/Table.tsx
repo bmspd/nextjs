@@ -8,6 +8,7 @@ import {
   TableCell,
   TableBody,
   TablePagination,
+  Typography,
 } from '@mui/material'
 import {
   ColumnDef,
@@ -58,7 +59,14 @@ const Table: TableComponent = ({ data, columns, pagination, onPaginationChange }
                       colSpan={header.colSpan}
                     >
                       {header.isPlaceholder ? null : (
-                        <div>{flexRender(header.column.columnDef.header, header.getContext())}</div>
+                        <div>
+                          {flexRender(
+                            <Typography variant="body1" fontWeight="600" color="gray">
+                              {`${header.column.columnDef.header}`}
+                            </Typography>,
+                            header.getContext()
+                          )}
+                        </div>
                       )}
                     </TableCell>
                   )
@@ -89,7 +97,7 @@ const Table: TableComponent = ({ data, columns, pagination, onPaginationChange }
           component="div"
           rowsPerPage={pageSize}
           page={pageIndex}
-          sx={{ overflowX: 'hidden' }}
+          sx={{ overflowX: 'hidden', mt: 1 }}
           count={table.getPageCount()}
           ActionsComponent={TablePaginationActions}
           onPageChange={(event, pageNumber) => {

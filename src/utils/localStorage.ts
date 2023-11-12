@@ -16,6 +16,13 @@ export class LocalStorage {
         const parsedILS = JSON.parse(interfaceLS ?? '{}')
         if (typeof parsedILS.menuBar.collapsed !== 'boolean') throw ':('
         if (parsedILS.mode !== 'light' && parsedILS.mode !== 'dark') throw ':('
+        const projectsView = parsedILS.projects.view
+        if (
+          projectsView !== 'col' &&
+          projectsView !== 'dobule-row' &&
+          projectsView !== 'triple-row'
+        )
+          throw ':('
         return parsedILS
       } catch (e) {
         window.localStorage.setItem('interface', JSON.stringify(interfaceInitialState))
