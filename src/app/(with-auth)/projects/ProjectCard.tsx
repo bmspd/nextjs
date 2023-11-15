@@ -1,9 +1,5 @@
 'use client'
-import {
-  IProject,
-  PROJECT_PATTERN_COLORS,
-  PROJECT_PATTERN_TYPES,
-} from '@/http/services/ProjectsService'
+import { IProject } from '@/http/services/ProjectsService'
 import { Card, CardActionArea, CardContent, CardMedia, Typography } from '@mui/material'
 import React from 'react'
 import NextLink from 'next/link'
@@ -15,6 +11,7 @@ import { selectProjectLogo } from '@/store/reducers/ProjectsSlice/selectors'
 import styles from './styles.module.scss'
 import { selectProjectsView } from '@/store/reducers/InterfaceSlice/selectors'
 import { capitalize } from 'lodash'
+import { PROJECT_PATTERN_COLORS, PROJECT_PATTERN_TYPES } from '@/constants/projects.constants'
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface ProjectCardProps extends IProject {}
 

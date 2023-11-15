@@ -19,7 +19,7 @@ $api.interceptors.response.use(
     const serverSideRefreshToken =
       error.request?.getHeaders && error.request?.getHeaders()?.['server-side-refresh']
     if (
-      error.response.status === 401 &&
+      error.response?.status === 401 &&
       (serverSideRefreshToken || localStorage.getItem('refreshToken'))
     ) {
       let apiResponse

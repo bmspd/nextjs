@@ -1,0 +1,126 @@
+'use client'
+import MainBlock from '@/components/Blocks/MainBlock'
+import { useTypedDispatch, useTypedSelector } from '@/hooks/typedStoreHooks'
+import { IProject, UpdateProjectBody } from '@/http/services/ProjectsService'
+import { setProjectById } from '@/store/reducers/ProjectsSlice/ProjectSlice'
+import {
+  selectPreloaded,
+  selectProjectById,
+  selectProjectLogo,
+} from '@/store/reducers/ProjectsSlice/selectors'
+import { updateProjectSchema } from '@/validation/project.validations'
+import { yupResolver } from '@hookform/resolvers/yup'
+import React, { useEffect, useState, useMemo } from 'react'
+import { v4 as uuidv4 } from 'uuid'
+import { Controller, SubmitHandler, useForm } from 'react-hook-form'
+import styles from './style.module.scss'
+import DefaultTextField from '@/components/Inputs/DefaultTextField/DefaultTextField'
+import { Button } from '@mui/material'
+import { getProjectLogo, updateProject } from '@/store/reducers/ProjectsSlice/asyncThunks'
+import Select from '@/components/Select/Select'
+import ImageUpload from '@/components/Image/ImageUpload/ImageUpload'
+import {
+  PROJECT_PATTERNS_COLORS_OPTIONS,
+  PROJECT_PATTERNS_TYPES_OPTIONS,
+} from '@/constants/projects.constants'
+import { useDidMount } from '@/hooks/useDidMount'
+const ProjectSettings = ({ id, serverProject }: { id: string; serverProject: IProject }) => {
+  const preloadedProject = useTypedSelector(selectPreloaded(`project.${id}`))
+  const project = useTypedSelector(selectProjectById(+id))
+  const projectLogo = useTypedSelector(selectProjectLogo(+id))
+  const dispatch = useTypedDispatch()
+  const didMount = useDidMount()
+  const filesState = useState<File[]>([])
+  const logoIdentifier = useMemo(() => uuidv4(), [])
+  const [files, setFiles] = filesState
+  useEffect(() => {
+    if (didMount && !projectLogo) return
+    if (projectLogo) {
+      fetch(projectLogo.imgSource)
+        .then((r) => r.blob())
+        .then((blobFile) => new File([blobFile], logoIdentifier))
+        .then((fileFromblob) => setFiles([fileFromblob]))
+    } else {
+      setFiles([])
+    }
+  }, [projectLogo])
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      name: !preloadedProject ? serverProject?.name : project?.name,
+      // при ассинхронной смене значения - в Select value не подставляется
+      // чтобы не ставить useEffect с setValue решил так
+      pattern_color: !preloadedProject ? serverProject?.pattern_color : project?.pattern_color,
+      pattern_type: !preloadedProject ? serverProject?.pattern_type : project?.pattern_type,
+    },
+    resolver: yupResolver(updateProjectSchema),
+  })
+  const onSubmit: SubmitHandler<UpdateProjectBody> = async (data) => {
+    if (!files.length) data['image'] = null
+    else if (files[0]?.name !== logoIdentifier) data['image'] = files[0]
+    else data['same_logo'] = true
+    dispatch(updateProject({ projectId: +id, data }))
+      .unwrap()
+      .then(() => {
+        if (!data.same_logo) dispatch(getProjectLogo({ id: +id }))
+      })
+  }
+  useEffect(() => {
+    if (!preloadedProject) {
+      dispatch(setProjectById(serverProject))
+      if (serverProject.logo?.id) dispatch(getProjectLogo({ id: serverProject.id }))
+    }
+  }, [])
+  return (
+    <>
+      <MainBlock sx={{ marginTop: 4 }}>
+        <form className={styles.updateProjectForm} onSubmit={handleSubmit(onSubmit)}>
+          <Controller
+            name="name"
+            control={control}
+            render={({ field }) => (
+              <DefaultTextField
+                {...field}
+                label="Project name"
+                isRequired
+                autoComplete="off"
+                type="text"
+                error={!!errors.name?.message}
+                alertMessage={errors.name?.message}
+              />
+            )}
+          />
+          <Controller
+            name="pattern_type"
+            control={control}
+            render={({ field }) => (
+              <Select
+                {...field}
+                placeholder="Background pattern"
+                options={PROJECT_PATTERNS_TYPES_OPTIONS}
+              />
+            )}
+          />
+          <Controller
+            name="pattern_color"
+            control={control}
+            render={({ field }) => (
+              <Select
+                {...field}
+                placeholder="Background color"
+                options={PROJECT_PATTERNS_COLORS_OPTIONS}
+              />
+            )}
+          />
+          <ImageUpload filesState={filesState} />
+          <Button type="submit">SUBMIT BUTTON</Button>
+        </form>
+      </MainBlock>
+    </>
+  )
+}
+
+export default ProjectSettings

@@ -2,7 +2,11 @@
 import React, { useEffect, useId, useMemo } from 'react'
 import MainBlock from '@/components/Blocks/MainBlock'
 import { useTypedDispatch, useTypedSelector } from '@/hooks/typedStoreHooks'
-import { selectPreloaded, selectProjects } from '@/store/reducers/ProjectsSlice/selectors'
+import {
+  selectPreloaded,
+  selectProjectLogos,
+  selectProjects,
+} from '@/store/reducers/ProjectsSlice/selectors'
 import { Button } from '@mui/material'
 import { openModal } from '@/store/reducers/ModalSlice/ModalSlice'
 import { CreateProjectModal } from '@/components/Modals/CreateProjectModal'
@@ -27,6 +31,7 @@ const Projects: React.FC<{ serverProjects: IProject[] }> = ({ serverProjects }) 
   const projects = useTypedSelector(selectProjects)
   const preloadedProjects = useTypedSelector(selectPreloaded('projects'))
   const projectsView = useTypedSelector(selectProjectsView)
+  const projectsLogos = useTypedSelector(selectProjectLogos)
   const projectStyles = useMemo(() => formProjectStyles(projectsView), [projectsView])
   const dispatch = useTypedDispatch()
   const formId = useId()
@@ -34,7 +39,7 @@ const Projects: React.FC<{ serverProjects: IProject[] }> = ({ serverProjects }) 
     if (!preloadedProjects) {
       dispatch(setProjects(serverProjects))
       serverProjects.forEach((el) => {
-        if (el.logo) {
+        if (el.logo && !projectsLogos[el.id]) {
           dispatch(getProjectLogo({ id: el.id }))
         }
       })

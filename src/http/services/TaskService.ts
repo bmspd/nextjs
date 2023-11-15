@@ -20,12 +20,12 @@ export interface ITask {
   project: IProject
 }
 export type ICreateTaskBody = Pick<ITask, 'title' | 'description' | 'status' | 'priority'> & {
-  executor_id: number
+  executor_id?: number
 }
 export type ICreateTaskForm = Pick<ITask, 'title' | 'description' | 'status' | 'priority'> & {
-  executor: {
-    id: number
-  }
+  executor?: {
+    id?: number
+  } | null
 }
 export type ITaskWithPagination = DataWithPagination<ITask>
 export default class TasksService {

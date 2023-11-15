@@ -1,0 +1,6 @@
+@import '../../../../../styles/variables';
+.updateProjectForm {
+  display: flex;
+  flex-direction: column;
+  gap: $step * 3
+}

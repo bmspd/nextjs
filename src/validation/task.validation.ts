@@ -14,8 +14,8 @@ export const createTaskSchema = yup.object({
   priority: yup.mixed<TASK_PRIORITIES>().oneOf(Object.values(TASK_PRIORITIES)).required(),
   executor: yup
     .object({
-      id: yup.number().required(),
+      id: yup.number(),
     })
-    .default(null)
-    .required(),
+    .nullable()
+    .default(null),
 })

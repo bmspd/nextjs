@@ -1,6 +1,7 @@
 import { AxiosResponse } from 'axios'
 import $api from '..'
 import { DataWithPagination, PaginationParams } from '@/types/pagination'
+import { PROJECT_PATTERN_COLORS, PROJECT_PATTERN_TYPES } from '@/constants/projects.constants'
 
 export interface IUserInProject {
   id: number
@@ -15,22 +16,16 @@ export interface IProject {
   pattern_type: PROJECT_PATTERN_TYPES | null
   pattern_color: PROJECT_PATTERN_COLORS | null
 }
-export enum PROJECT_PATTERN_TYPES {
-  PLANTS = 'plants',
-}
-export enum PROJECT_PATTERN_COLORS {
-  RED = 'red',
-  GREEN = 'green',
-  BLUE = 'blue',
-}
+
 export type ProjectLogo = {
   id: number
   original_name: string
   imgSource?: string | null
 }
 export type CreateProjectBody = Omit<IProject, 'id' | 'logo' | 'pattern_type' | 'pattern_color'> & {
-  image?: File
+  image?: File | null
 } & Partial<Pick<IProject, 'pattern_color' | 'pattern_type'>>
+export type UpdateProjectBody = Omit<Partial<CreateProjectBody>, 'id'> & { same_logo?: boolean }
 export type DeleteProjectBody = Pick<IProject, 'id'>
 export type InviteUserToProjectBody = { email: string }
 export type GetProjectLogoBody = Pick<IProject, 'id'>
@@ -62,6 +57,13 @@ export default class ProjectsService {
     return $api.get<AxiosResponse>(`/projects/${projectId}/users`, { params: params })
   }
   static async inviteUserToProject(projectId: string | number, data: InviteUserToProjectBody) {
-    return $api.patch(`/projects/${projectId}/invite`, data)
+    return $api.patch(`/projects/${projectId}/invite`, data, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    })
+  }
+  static async updateProject(projectId: string | number, data: UpdateProjectBody) {
+    return $api.patch<AxiosResponse>(`/projects/${projectId}`, data, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    })
   }
 }

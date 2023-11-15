@@ -3,8 +3,16 @@ import React, { useEffect, useCallback, useId } from 'react'
 import MainBlock from '@/components/Blocks/MainBlock'
 import { useTypedDispatch, useTypedSelector } from '@/hooks/typedStoreHooks'
 import { ITask, ITaskWithPagination } from '@/http/services/TaskService'
-import { deleteProjectById, setTasks } from '@/store/reducers/ProjectsSlice/ProjectSlice'
-import { selectTasksByProject } from '@/store/reducers/ProjectsSlice/selectors'
+import {
+  deleteProjectById,
+  setProjectById,
+  setTasks,
+} from '@/store/reducers/ProjectsSlice/ProjectSlice'
+import {
+  selectPreloaded,
+  selectProjectById,
+  selectTasksByProject,
+} from '@/store/reducers/ProjectsSlice/selectors'
 import { CellContext, ColumnDef } from '@tanstack/react-table'
 import Table from '@/components/Table/Table'
 import { Button, IconButton } from '@mui/material'
@@ -12,6 +20,7 @@ import NextLink from 'next/link'
 import {
   deleteProject,
   deleteTask,
+  getProjectLogo,
   getTasksByProject,
 } from '@/store/reducers/ProjectsSlice/asyncThunks'
 import { openModal } from '@/store/reducers/ModalSlice/ModalSlice'
@@ -24,11 +33,15 @@ import { SNACKBAR_TYPES } from '@/types/notistack'
 import { useRouter } from 'next/navigation'
 import CustomCell, { DefaultCell } from '@/components/Table/CustomCell'
 import InviteUserToProjectModal from '@/components/Modals/InviteUserToProjectModal'
-const Project: React.FC<{ id: string; serverTasks: ITaskWithPagination }> = ({
-  id,
-  serverTasks,
-}) => {
+import { IProject } from '@/http/services/ProjectsService'
+const Project: React.FC<{
+  id: string
+  serverTasks: ITaskWithPagination
+  serverProject: IProject
+}> = ({ id, serverTasks, serverProject }) => {
   const tasks = useTypedSelector(selectTasksByProject(+id)) ?? []
+  const project = useTypedSelector(selectProjectById(+id))
+  const preloadedProject = useTypedSelector(selectPreloaded(`project.${id}`))
   const formId = useId()
   const tasksData = tasks?.data ?? []
   const tasksPagination = tasks?.meta?.pagination
@@ -44,6 +57,10 @@ const Project: React.FC<{ id: string; serverTasks: ITaskWithPagination }> = ({
   )
   useEffect(() => {
     dispatch(setTasks({ project_id: +id, tasks: serverTasks }))
+    if (!preloadedProject) {
+      dispatch(setProjectById(serverProject))
+      if (serverProject.logo?.id) dispatch(getProjectLogo({ id: serverProject.id }))
+    }
   }, [])
   const deleteProjectCb = useCallback(() => {
     dispatch(deleteProject({ id: +id }))
@@ -148,8 +165,13 @@ const Project: React.FC<{ id: string; serverTasks: ITaskWithPagination }> = ({
   return (
     <>
       <MainBlock sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <div>PROJECT {id}</div>
         <div>
+          {project?.name} #{project?.id}
+        </div>
+        <div>
+          <NextLink href={`${id}/settings`}>
+            <Button color="success">Project settings</Button>
+          </NextLink>
           <Button
             color="error"
             onClick={() => {

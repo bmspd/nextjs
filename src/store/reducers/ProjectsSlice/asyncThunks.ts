@@ -5,6 +5,7 @@ import ProjectsService, {
   GetProjectLogoBody,
   IProject,
   IUserInProjectWithPagination,
+  UpdateProjectBody,
 } from '@/http/services/ProjectsService'
 import TasksService, { ICreateTaskBody, ITaskWithPagination } from '@/http/services/TaskService'
 import { PaginationParams } from '@/types/pagination'
@@ -26,8 +27,9 @@ export const deleteProject = createAsyncThunk(
 )
 export const getProjectLogo = createAsyncThunk(
   'projects/getProjectLogo',
-  tryCatch<GetProjectLogoBody, string>(async (data) => {
+  tryCatch<GetProjectLogoBody, string | null>(async (data) => {
     const response = await ProjectsService.getProjectLogo(data)
+    if (response.status === 204) return null
     const file = new File([response.data], `logo-${data.id}`, {
       type: response.headers['content-type'],
     })
@@ -80,6 +82,14 @@ export const inviteUserToProject = createAsyncThunk(
     const response = await ProjectsService.inviteUserToProject(data.projectId, {
       email: data.email,
     })
+    return response.data
+  })
+)
+
+export const updateProject = createAsyncThunk(
+  'projects/updateProject',
+  tryCatch<{ projectId: number | string; data: UpdateProjectBody }>(async (data) => {
+    const response = await ProjectsService.updateProject(data.projectId, data.data)
     return response.data
   })
 )

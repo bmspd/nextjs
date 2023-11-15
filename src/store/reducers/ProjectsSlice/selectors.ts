@@ -22,3 +22,6 @@ export const selectTasksByProject = (id: number) => (state: RootState) =>
 
 export const selectUsersByProject = (id: number) => (state: RootState) =>
   state.projects.usersByProject[id]
+
+export const selectProjectById = (id: number) => (state: RootState) =>
+  state.projects.projectsById[id]

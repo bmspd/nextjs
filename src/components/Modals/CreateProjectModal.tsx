@@ -15,6 +15,11 @@ import DefaultTextField from '../Inputs/DefaultTextField/DefaultTextField'
 import styles from './style.module.scss'
 import ImageUpload from '../Image/ImageUpload/ImageUpload'
 import { useState } from 'react'
+import Select from '../Select/Select'
+import {
+  PROJECT_PATTERNS_COLORS_OPTIONS,
+  PROJECT_PATTERNS_TYPES_OPTIONS,
+} from '@/constants/projects.constants'
 
 const Content: React.FC<{ formId: string | undefined; handleClose: () => void }> = ({
   formId,
@@ -65,6 +70,28 @@ const Content: React.FC<{ formId: string | undefined; handleClose: () => void }>
             type="text"
             error={!!errors.name?.message}
             alertMessage={errors.name?.message}
+          />
+        )}
+      />
+      <Controller
+        name="pattern_type"
+        control={control}
+        render={({ field }) => (
+          <Select
+            {...field}
+            placeholder="Background pattern"
+            options={PROJECT_PATTERNS_TYPES_OPTIONS}
+          />
+        )}
+      />
+      <Controller
+        name="pattern_color"
+        control={control}
+        render={({ field }) => (
+          <Select
+            {...field}
+            placeholder="Background color"
+            options={PROJECT_PATTERNS_COLORS_OPTIONS}
           />
         )}
       />

@@ -6,12 +6,14 @@ import {
   getProjectLogo,
   getTasksByProject,
   getUsersByProject,
+  updateProject,
 } from './asyncThunks'
 import { ITaskWithPagination } from '@/http/services/TaskService'
 import { merge } from 'lodash'
 import moment from 'moment'
 type InitialState = {
   projects: IProject[]
+  projectsById: Record<string, IProject>
   usersByProject: Record<number, IUserInProjectWithPagination>
   tasksByProject: Record<number, ITaskWithPagination>
   logos: Record<number, { id: number; imgSource: string }>
@@ -19,6 +21,7 @@ type InitialState = {
 }
 const initialState: InitialState = {
   projects: [],
+  projectsById: {},
   logos: {},
   usersByProject: {},
   tasksByProject: {},
@@ -32,6 +35,11 @@ const ProjectsSlice = createSlice({
     setProjects: (state, action: PayloadAction<IProject[]>) => {
       state.preloaded['projects'] = moment().format()
       state.projects = action.payload
+    },
+    setProjectById: (state, action: PayloadAction<IProject>) => {
+      const project = action.payload
+      state.preloaded[`project.${project.id}`] = moment().format()
+      state.projectsById[project.id] = action.payload
     },
     deleteProjectById: (state, action: PayloadAction<number>) => {
       state.projects = state.projects.filter((project) => project.id !== action.payload)
@@ -77,13 +85,21 @@ const ProjectsSlice = createSlice({
       })
       .addCase(getProjectLogo.fulfilled, (state, action) => {
         const { payload, meta } = action
-        state.logos[meta.arg.id] = { id: meta.arg.id, imgSource: payload }
+        if (payload === null) delete state.logos[meta.arg.id]
+        else state.logos[meta.arg.id] = { id: meta.arg.id, imgSource: payload }
         // const project = state.projects.find(project => meta.arg.id === project.id)
         // if (project && project.logo) {
         //   project.logo.imgSource = payload
         // }
+      })
+      .addCase(updateProject.fulfilled, (state, action) => {
+        const { payload, meta } = action
+        state.projectsById[meta.arg.projectId] = payload
+        state.projects = state.projects.map((project) =>
+          project.id === meta.arg.projectId ? { ...project, ...payload } : project
+        )
       }),
 })
 
-export const { setProjects, setTasks, deleteProjectById } = ProjectsSlice.actions
+export const { setProjects, setProjectById, setTasks, deleteProjectById } = ProjectsSlice.actions
 export default ProjectsSlice.reducer
