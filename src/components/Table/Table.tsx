@@ -42,6 +42,7 @@ const Table: TableComponent = ({ data, columns, pagination, onPaginationChange }
     state: { pagination: formattedPagination },
     pageCount: pagination?.total ?? 0,
     manualPagination: true,
+    debugAll: false,
   })
   const { pageSize, pageIndex } = table.getState().pagination
   return (

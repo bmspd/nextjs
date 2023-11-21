@@ -24,6 +24,9 @@ import {
   PROJECT_PATTERNS_TYPES_OPTIONS,
 } from '@/constants/projects.constants'
 import { useDidMount } from '@/hooks/useDidMount'
+import { enqueueSnackbar } from '@/store/reducers/NotificationsSlice/NotificationsSlice'
+import { uniqueId } from 'lodash'
+import { SNACKBAR_TYPES } from '@/types/notistack'
 const ProjectSettings = ({ id, serverProject }: { id: string; serverProject: IProject }) => {
   const preloadedProject = useTypedSelector(selectPreloaded(`project.${id}`))
   const project = useTypedSelector(selectProjectById(+id))
@@ -33,6 +36,12 @@ const ProjectSettings = ({ id, serverProject }: { id: string; serverProject: IPr
   const filesState = useState<File[]>([])
   const logoIdentifier = useMemo(() => uuidv4(), [])
   const [files, setFiles] = filesState
+  useEffect(() => {
+    if (!preloadedProject) {
+      dispatch(setProjectById(serverProject))
+      if (serverProject.logo?.id) dispatch(getProjectLogo({ id: serverProject.id }))
+    }
+  }, [])
   useEffect(() => {
     if (didMount && !projectLogo) return
     if (projectLogo) {
@@ -65,15 +74,19 @@ const ProjectSettings = ({ id, serverProject }: { id: string; serverProject: IPr
     dispatch(updateProject({ projectId: +id, data }))
       .unwrap()
       .then(() => {
+        dispatch(
+          enqueueSnackbar({
+            message: 'Project updated',
+            options: {
+              key: uniqueId(),
+              variant: SNACKBAR_TYPES.SUCCESS,
+            },
+          })
+        )
         if (!data.same_logo) dispatch(getProjectLogo({ id: +id }))
       })
   }
-  useEffect(() => {
-    if (!preloadedProject) {
-      dispatch(setProjectById(serverProject))
-      if (serverProject.logo?.id) dispatch(getProjectLogo({ id: serverProject.id }))
-    }
-  }, [])
+
   return (
     <>
       <MainBlock sx={{ marginTop: 4 }}>
@@ -116,7 +129,7 @@ const ProjectSettings = ({ id, serverProject }: { id: string; serverProject: IPr
             )}
           />
           <ImageUpload filesState={filesState} />
-          <Button type="submit">SUBMIT BUTTON</Button>
+          <Button type="submit">Update project</Button>
         </form>
       </MainBlock>
     </>
