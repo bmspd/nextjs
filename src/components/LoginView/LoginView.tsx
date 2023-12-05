@@ -11,6 +11,7 @@ import { useTypedDispatch } from '@/hooks/typedStoreHooks'
 import { signIn } from '@/store/reducers/AuthSlice/asyncThunks'
 import { SignInResponse } from 'next-auth/react'
 import LoginWrapper from './LoginWrapper'
+import axios from 'axios'
 
 interface ILogInForm {
   username: string
@@ -87,7 +88,7 @@ const LoginView: React.FC<{ reset?: () => void }> = ({ reset }) => {
         </Link>
         , if you has not registered yet
       </Typography>
-      {}
+      <Button onClick={() => axios.get('http://localhost:4000/api/0')}>TAP ME12</Button>
     </LoginWrapper>
   )
 }

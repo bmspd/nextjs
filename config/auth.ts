@@ -12,7 +12,7 @@ export const authConfig: AuthOptions = {
       clientSecret: process.env.GOOGLE_SECRET!,
       async profile(profile, token) {
         const googleUser = await axios.post(
-          process.env.NEXT_PUBLIC_BACKEND_BASEURL + '/auth/login/google',
+          process.env.NEXT_PUBLIC_SERVER_BACKEND_BASEURL + '/auth/login/google',
           {
             email: profile.email,
             first_name: profile.given_name,
@@ -30,10 +30,13 @@ export const authConfig: AuthOptions = {
       async authorize(credentials) {
         if (!credentials?.username || !credentials?.password) return null
         try {
-          const user = await axios.post(process.env.NEXT_PUBLIC_BACKEND_BASEURL + '/auth/login', {
-            username: credentials.username,
-            password: credentials.password,
-          })
+          const user = await axios.post(
+            process.env.NEXT_PUBLIC_SERVER_BACKEND_BASEURL + '/auth/login',
+            {
+              username: credentials.username,
+              password: credentials.password,
+            }
+          )
           return {
             ...user.data.user,
             refreshToken: user.data.refreshToken,
@@ -58,13 +61,16 @@ export const authConfig: AuthOptions = {
           accessToken: userFromToken.accessToken ?? userFromToken?.tokens?.accessToken,
           refreshToken: userFromToken.refreshToken ?? userFromToken?.tokens?.refreshToken,
         }
-        const serverUser = await $api.get(process.env.NEXT_PUBLIC_BACKEND_BASEURL + '/auth/login', {
-          headers: {
-            Authorization: `Bearer ${tokens.accessToken}`,
-            'server-side-refresh': tokens.refreshToken,
-            'server-side-access': tokens.accessToken,
-          },
-        })
+        const serverUser = await $api.get(
+          process.env.NEXT_PUBLIC_SERVER_BACKEND_BASEURL + '/auth/login',
+          {
+            headers: {
+              Authorization: `Bearer ${tokens.accessToken}`,
+              'server-side-refresh': tokens.refreshToken,
+              'server-side-access': tokens.accessToken,
+            },
+          }
+        )
         const reqHeaders = serverUser.request.getHeaders()
         token.user = {
           data: { ...serverUser.data },

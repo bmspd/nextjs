@@ -8,7 +8,7 @@ export type ServerSideReqData = {
   cache?: RequestCache
 }
 const refreshToken = async (refreshToken: string): Promise<string> => {
-  const baseURL = process.env.NEXT_PUBLIC_BACKEND_BASEURL
+  const baseURL = process.env.NEXT_PUBLIC_SERVER_BACKEND_BASEURL
   const url = `${baseURL}/auth/refresh`
   const result = await fetch(url, {
     headers: {
@@ -23,7 +23,7 @@ type TServerSideRequest = <T>(
 ) => Promise<{ serialized: T; response: Response }>
 export const serverSideRequest: TServerSideRequest = async (data) => {
   const session = await getServerSession(authConfig)
-  const baseURL = process.env.NEXT_PUBLIC_BACKEND_BASEURL
+  const baseURL = process.env.NEXT_PUBLIC_SERVER_BACKEND_BASEURL
   const url = `${baseURL}/${data.url}`
   const reqData = await fetch(url, {
     next: { tags: data.tags },
