@@ -7,10 +7,24 @@ export type CustomCellProps = {
   lines?: 1 | 2 | 3 | 4
   className?: string
   isDefault?: boolean
+  contentPosition?: 'center'
 }
-const CustomCell: React.FC<CustomCellProps> = ({ children, lines, className, isDefault }) => {
+const CustomCell: React.FC<CustomCellProps> = ({
+  children,
+  lines,
+  className,
+  isDefault,
+  contentPosition,
+}) => {
   return (
-    <div className={cn(styles[`lineClamp${lines}`], className, isDefault && styles.cellDefaults)}>
+    <div
+      className={cn(
+        styles[`lineClamp${lines}`],
+        className,
+        isDefault && styles.cellDefaults,
+        contentPosition && styles[`content-${contentPosition}`]
+      )}
+    >
       {children}
     </div>
   )

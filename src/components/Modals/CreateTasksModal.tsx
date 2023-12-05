@@ -138,7 +138,7 @@ const Content: React.FC<{ formId: string | undefined; handlelose: () => void }> 
               valueField="id"
               labelField="username"
               selector={selectUsersByProject(+params.id)}
-              fetchCallback={(page, per_page, timestamp?) =>
+              fetchCallback={(page, per_page, timestamp) =>
                 dispatch(
                   getUsersByProject({
                     projectId: +params.id,

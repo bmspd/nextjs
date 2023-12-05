@@ -2,13 +2,14 @@ import CustomCell, { DefaultCell } from '@/components/Table/CustomCell'
 import { ITask } from '@/http/services/TaskService'
 import { CellContext, ColumnDef } from '@tanstack/react-table'
 import NextLink from 'next/link'
-import { IconButton } from '@mui/material'
+import { IconButton, Tooltip, Typography } from '@mui/material'
 import { useCallback, useMemo } from 'react'
 import { useTypedDispatch } from '@/hooks/typedStoreHooks'
 import { openModal } from '@/store/reducers/ModalSlice/ModalSlice'
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded'
 import { ConfirmationModal } from '@/components/Modals/ConfirmationModal'
 import { deleteTask, getTasksByProject } from '@/store/reducers/ProjectsSlice/asyncThunks'
+import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded'
 import { uniqueId } from 'lodash'
 import { useRouter } from 'next/navigation'
 import { enqueueSnackbar } from '@/store/reducers/NotificationsSlice/NotificationsSlice'
@@ -68,8 +69,46 @@ export const Columns = (id: string): ColumnDef<ITask>[] => {
       },
       { header: 'Status', accessorKey: 'status', cell: DefaultCell },
       { header: 'Priority', accessorKey: 'priority', cell: DefaultCell },
-      { header: 'Creator', accessorKey: 'creator.id', cell: DefaultCell },
-      { header: 'Executor', accessorKey: 'executor.id', cell: DefaultCell },
+      {
+        header: 'Creator',
+        accessorKey: 'creator',
+        cell: (props) => {
+          type TCreator = ITask['creator']
+          const value = props.getValue<TCreator>()
+          return value ? (
+            <CustomCell>
+              <Tooltip title={<Typography>{value.username}</Typography>} placement="top" arrow>
+                <div>
+                  <IconButton size="small">
+                    <AccountCircleRoundedIcon fontSize="large" />
+                  </IconButton>
+                  {value.username}
+                </div>
+              </Tooltip>
+            </CustomCell>
+          ) : null
+        },
+      },
+      {
+        header: 'Executor',
+        accessorKey: 'executor',
+        cell: (props) => {
+          type TExecutor = ITask['executor']
+          const value = props.getValue<TExecutor>()
+          return value ? (
+            <CustomCell>
+              <Tooltip title={<Typography>{value.username}</Typography>} placement="top" arrow>
+                <div>
+                  <IconButton size="small">
+                    <AccountCircleRoundedIcon fontSize="large" />
+                  </IconButton>
+                  {value.username}
+                </div>
+              </Tooltip>
+            </CustomCell>
+          ) : null
+        },
+      },
       {
         header: 'Actions',
         id: 'actions',
