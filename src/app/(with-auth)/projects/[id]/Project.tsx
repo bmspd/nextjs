@@ -4,6 +4,7 @@ import MainBlock from '@/components/Blocks/MainBlock'
 import { useTypedDispatch, useTypedSelector } from '@/hooks/typedStoreHooks'
 import { ITask, ITaskWithPagination } from '@/http/services/TaskService'
 import { setProjectById, setTasks } from '@/store/reducers/ProjectsSlice/ProjectSlice'
+import noImage from '/public/assets/images/no-image.jpg'
 import {
   selectPreloaded,
   selectProjectById,
@@ -21,7 +22,7 @@ const Project: React.FC<{
   serverTasks: ITaskWithPagination
   serverProject: IProject
 }> = ({ id, serverTasks, serverProject }) => {
-  const tasks = useTypedSelector(selectTasksByProject(+id)) ?? []
+  const tasks = useTypedSelector(selectTasksByProject(+id))
   const project = useTypedSelector(selectProjectById(+id))
   const projectLogo = useTypedSelector(selectProjectLogo(+id))
   const preloadedProject = useTypedSelector(selectPreloaded(`project.${id}`))
@@ -37,9 +38,9 @@ const Project: React.FC<{
     [id]
   )
   useEffect(() => {
-    dispatch(setTasks({ project_id: +id, tasks: serverTasks }))
     if (!preloadedProject) {
       dispatch(setProjectById(serverProject))
+      dispatch(setTasks({ project_id: +id, tasks: serverTasks }))
       if (serverProject.logo?.id) dispatch(getProjectLogo({ id: serverProject.id }))
     }
   }, [])
@@ -50,7 +51,7 @@ const Project: React.FC<{
       <MainBlock sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div style={{ height: 50, width: 50, position: 'relative' }}>
           <Image
-            src={projectLogo?.imgSource}
+            src={projectLogo?.imgSource ?? noImage}
             fill={true}
             style={{ objectFit: 'cover', borderRadius: '16px' }}
             alt=""

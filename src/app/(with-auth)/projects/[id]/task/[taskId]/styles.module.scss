@@ -1,0 +1,18 @@
+@import '../../../../../../styles/variables';
+
+.taskPage {
+  display: flex;
+  gap: $step * 3;
+}
+
+.taskMainInfo, .taskExtraInfo {
+  display: flex;
+  flex-direction: column;
+  gap: $step * 4;
+}
+.taskMainInfo {
+  width: 65%;
+}
+.taskExtraInfo {
+  width: 35%;
+}

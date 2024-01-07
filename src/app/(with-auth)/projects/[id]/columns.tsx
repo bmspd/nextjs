@@ -2,18 +2,18 @@ import CustomCell, { DefaultCell } from '@/components/Table/CustomCell'
 import { ITask } from '@/http/services/TaskService'
 import { CellContext, ColumnDef } from '@tanstack/react-table'
 import NextLink from 'next/link'
-import { IconButton, Tooltip, Typography } from '@mui/material'
+import { IconButton } from '@mui/material'
 import { useCallback, useMemo } from 'react'
 import { useTypedDispatch } from '@/hooks/typedStoreHooks'
 import { openModal } from '@/store/reducers/ModalSlice/ModalSlice'
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded'
 import { ConfirmationModal } from '@/components/Modals/ConfirmationModal'
 import { deleteTask, getTasksByProject } from '@/store/reducers/ProjectsSlice/asyncThunks'
-import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded'
 import { uniqueId } from 'lodash'
 import { useRouter } from 'next/navigation'
 import { enqueueSnackbar } from '@/store/reducers/NotificationsSlice/NotificationsSlice'
 import { SNACKBAR_TYPES } from '@/types/notistack'
+import UserProfile from '@/components/Avatars/UserProfile/UserProfile'
 export const Columns = (id: string): ColumnDef<ITask>[] => {
   const router = useRouter()
   const dispatch = useTypedDispatch()
@@ -77,14 +77,7 @@ export const Columns = (id: string): ColumnDef<ITask>[] => {
           const value = props.getValue<TCreator>()
           return value ? (
             <CustomCell>
-              <Tooltip title={<Typography>{value.username}</Typography>} placement="top" arrow>
-                <div>
-                  <IconButton size="small">
-                    <AccountCircleRoundedIcon fontSize="large" />
-                  </IconButton>
-                  {value.username}
-                </div>
-              </Tooltip>
+              <UserProfile username={value.username} />
             </CustomCell>
           ) : null
         },
@@ -97,14 +90,7 @@ export const Columns = (id: string): ColumnDef<ITask>[] => {
           const value = props.getValue<TExecutor>()
           return value ? (
             <CustomCell>
-              <Tooltip title={<Typography>{value.username}</Typography>} placement="top" arrow>
-                <div>
-                  <IconButton size="small">
-                    <AccountCircleRoundedIcon fontSize="large" />
-                  </IconButton>
-                  {value.username}
-                </div>
-              </Tooltip>
+              <UserProfile username={value.username} />
             </CustomCell>
           ) : null
         },

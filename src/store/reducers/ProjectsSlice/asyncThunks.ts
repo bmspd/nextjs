@@ -2,12 +2,17 @@ import { tryCatch } from '@/decorators'
 import ProjectsService, {
   CreateProjectBody,
   DeleteProjectBody,
+  GetProjectByIdParams,
   GetProjectLogoBody,
   IProject,
   IUserInProjectWithPagination,
   UpdateProjectBody,
 } from '@/http/services/ProjectsService'
-import TasksService, { ICreateTaskBody, ITaskWithPagination } from '@/http/services/TaskService'
+import TasksService, {
+  ICreateTaskBody,
+  ITaskWithPagination,
+  IUpdateTaskBody,
+} from '@/http/services/TaskService'
 import { PaginationParams } from '@/types/pagination'
 import { createAsyncThunk } from '@reduxjs/toolkit'
 
@@ -15,6 +20,21 @@ export const createProject = createAsyncThunk(
   'projects/createProject',
   tryCatch<CreateProjectBody, Omit<IProject, 'logo'> & { logo_id?: number }>(async (data) => {
     const response = await ProjectsService.createProject(data)
+    return response.data
+  })
+)
+
+export const getProjectById = createAsyncThunk(
+  'projects/getProjectById',
+  tryCatch<GetProjectByIdParams>(async (data) => {
+    const response = await ProjectsService.getProjectById(data)
+    return response.data
+  })
+)
+export const getTaskByProjectById = createAsyncThunk(
+  'projects/getTaskByProjectById',
+  tryCatch<{ projectId: string | number; taskId: string | number }>(async (data) => {
+    const response = await TasksService.getTaskById(+data.projectId, +data.taskId)
     return response.data
   })
 )
@@ -60,6 +80,16 @@ export const deleteTask = createAsyncThunk(
     const response = await TasksService.deleteTask(data.projectId, data.taskId)
     return response.data
   })
+)
+
+export const updateTask = createAsyncThunk(
+  'projects/updateTask',
+  tryCatch<{ projectId: string | number; taskId: string | number; data: IUpdateTaskBody }>(
+    async ({ projectId, taskId, data }) => {
+      const response = await TasksService.updateTask(projectId, taskId, data)
+      return response.data
+    }
+  )
 )
 
 export const getUsersByProject = createAsyncThunk(

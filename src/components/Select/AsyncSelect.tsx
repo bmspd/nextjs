@@ -1,6 +1,15 @@
 'use client'
 import React, { useState } from 'react'
-import { Alert, Autocomplete, CircularProgress, Collapse, TextField } from '@mui/material'
+import cn from 'classnames'
+import {
+  Alert,
+  Autocomplete,
+  AutocompleteProps,
+  CircularProgress,
+  Collapse,
+  TextField,
+  TextFieldProps,
+} from '@mui/material'
 import { DataWithPagination } from '@/types/pagination'
 import { useTypedSelector } from '@/hooks/typedStoreHooks'
 import { RootState } from '@/store'
@@ -9,6 +18,7 @@ import { selectSpecificLoading } from '@/store/reducers/LoadingSlice/selectors'
 import { ControllerRenderProps } from 'react-hook-form'
 import { capitalize } from 'lodash'
 import styles from './style.module.scss'
+import { DropDownOption } from './Select'
 export type AsyncSelectProps<T> = {
   fetchCallback?: (page: number, per_page: number, timestamp?: number) => void
   loadingFunc?: string
@@ -19,6 +29,12 @@ export type AsyncSelectProps<T> = {
   alertMessage?: string
   error?: boolean
   label?: React.ReactNode
+  value?: DropDownOption | null
+  onChange?: (val: T & DropDownOption) => void
+  customInputProps?: TextFieldProps['InputProps']
+  customAutoCompleteProps?: Partial<
+    AutocompleteProps<unknown, undefined, undefined, undefined, 'div'>
+  >
 }
 // TODO: value from outter state, for now made only for controller
 const AsyncSelect = <T extends DataWithPagination<object>>({
@@ -30,7 +46,11 @@ const AsyncSelect = <T extends DataWithPagination<object>>({
   controlProps,
   alertMessage,
   error,
+  value,
+  onChange,
   label,
+  customInputProps,
+  customAutoCompleteProps,
 }: AsyncSelectProps<ValueOf<Pick<T, 'data'>>[number]>) => {
   const [open, setOpen] = useState(false)
   const { onChange: controlOnchange, value: controlValue, ...restControlProps } = controlProps ?? {}
@@ -53,7 +73,7 @@ const AsyncSelect = <T extends DataWithPagination<object>>({
   return (
     <div className={styles.selectWrapper}>
       <Autocomplete
-        value={restControlProps ? controlValue ?? null : undefined}
+        value={Object.keys(restControlProps).length ? controlValue ?? null : value}
         {...restControlProps}
         sx={{ width: '100%' }}
         open={open}
@@ -65,13 +85,15 @@ const AsyncSelect = <T extends DataWithPagination<object>>({
             fetchCallback && fetchCallback(1, 8, currentTime.getTime())
           }
         }}
+        {...customAutoCompleteProps}
         onClose={() => setOpen(false)}
         options={dataOptions}
         loading={loading}
         onChange={(ev, val) => {
           controlOnchange && controlOnchange(val)
+          onChange && onChange(val)
         }}
-        ListboxProps={{ onScroll }}
+        ListboxProps={{ onScroll, onClick: (e) => e.stopPropagation() }}
         isOptionEqualToValue={(option, value) => option.value === value.value}
         getOptionLabel={(option) => option.label}
         renderInput={(params) => (
@@ -87,6 +109,8 @@ const AsyncSelect = <T extends DataWithPagination<object>>({
                   {params.InputProps.endAdornment}
                 </React.Fragment>
               ),
+              onClick: (e) => e.stopPropagation(),
+              ...customInputProps,
             }}
           />
         )}
@@ -96,7 +120,7 @@ const AsyncSelect = <T extends DataWithPagination<object>>({
           </li>
         )}
       />
-      <Collapse in={!!alertMessage}>
+      <Collapse className={cn(!!alertMessage && styles.selectAlert)} in={!!alertMessage}>
         <Alert sx={{ padding: '0 16px', marginBottom: '2px' }} severity="error">
           {capitalize(alertMessage)}
         </Alert>

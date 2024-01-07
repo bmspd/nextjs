@@ -3,7 +3,7 @@ import { AxiosResponse } from 'axios'
 import $api from '..'
 import { IProject } from './ProjectsService'
 import { DataWithPagination } from '@/types/pagination'
-type IUser = {
+export type IUser = {
   id: number
   username: string
 }
@@ -20,8 +20,9 @@ export interface ITask {
   project: IProject
 }
 export type ICreateTaskBody = Pick<ITask, 'title' | 'description' | 'status' | 'priority'> & {
-  executor_id?: number
+  executor_id?: number | null
 }
+export type IUpdateTaskBody = Partial<ICreateTaskBody>
 export type ICreateTaskForm = Pick<ITask, 'title' | 'description' | 'status' | 'priority'> & {
   executor?: {
     id?: number
@@ -43,5 +44,17 @@ export default class TasksService {
     taskId: number | string
   ): Promise<AxiosResponse> {
     return $api.delete<AxiosResponse>(`/projects/${projectId}/tasks/${taskId}`)
+  }
+
+  static async getTaskById(projectId: number, taskId: number) {
+    return $api.get<ITask>(`/projects/${projectId}/tasks/${taskId}`)
+  }
+
+  static async updateTask(
+    projectId: number | string,
+    taskId: number | string,
+    data: IUpdateTaskBody
+  ) {
+    return $api.patch<ITask>(`/projects/${projectId}/tasks/${taskId}`, data)
   }
 }

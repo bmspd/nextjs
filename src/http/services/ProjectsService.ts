@@ -29,6 +29,7 @@ export type UpdateProjectBody = Omit<Partial<CreateProjectBody>, 'id'> & { same_
 export type DeleteProjectBody = Pick<IProject, 'id'>
 export type InviteUserToProjectBody = { email: string }
 export type GetProjectLogoBody = Pick<IProject, 'id'>
+export type GetProjectByIdParams = GetProjectLogoBody
 export default class ProjectsService {
   static async createProject(data: CreateProjectBody): Promise<AxiosResponse> {
     return $api.post<AxiosResponse>('/projects', data, {
@@ -40,6 +41,9 @@ export default class ProjectsService {
   }
   static async getProjects() {
     return $api.get<IProject[]>('/projects/personal')
+  }
+  static async getProjectById(data: GetProjectByIdParams) {
+    return $api.get<IProject>(`/projects/${data.id}`)
   }
   static async getProjectLogo(data: GetProjectLogoBody): Promise<AxiosResponse> {
     return $api.get<AxiosResponse>(`/projects/${data.id}/logo`, { responseType: 'blob' })
@@ -57,9 +61,7 @@ export default class ProjectsService {
     return $api.get<AxiosResponse>(`/projects/${projectId}/users`, { params: params })
   }
   static async inviteUserToProject(projectId: string | number, data: InviteUserToProjectBody) {
-    return $api.patch(`/projects/${projectId}/invite`, data, {
-      headers: { 'Content-Type': 'multipart/form-data' },
-    })
+    return $api.patch(`/projects/${projectId}/invite`, data)
   }
   static async updateProject(projectId: string | number, data: UpdateProjectBody) {
     return $api.patch<AxiosResponse>(`/projects/${projectId}`, data, {

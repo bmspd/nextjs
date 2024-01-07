@@ -1,3 +1,4 @@
+import { ITask } from '@/http/services/TaskService'
 import { RootState } from '@/store'
 //import { createSelector } from '@reduxjs/toolkit'
 
@@ -25,3 +26,8 @@ export const selectUsersByProject = (id: number) => (state: RootState) =>
 
 export const selectProjectById = (id: number) => (state: RootState) =>
   state.projects.projectsById[id]
+
+export const selectTaskByProjectById =
+  (projectId: number, taskId: number) =>
+  (state: RootState): ITask | undefined =>
+    state.projects.tasksByProjectById[projectId]?.[taskId]

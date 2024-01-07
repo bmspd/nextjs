@@ -59,11 +59,13 @@ const Projects: React.FC<{ serverProjects: IProject[] }> = ({ serverProjects }) 
           </Button>
           <ProjectsViewControls />
         </div>
-        <div style={projectStyles} className={styles.projectBoard}>
-          {projects.map((project) => (
-            <ProjectCard key={project.id} {...project} />
-          ))}
-        </div>
+        {!!projects.length && (
+          <div style={projectStyles} className={styles.projectBoard}>
+            {projects.map((project) => (
+              <ProjectCard key={project.id} {...project} />
+            ))}
+          </div>
+        )}
       </MainBlock>
     </div>
   )

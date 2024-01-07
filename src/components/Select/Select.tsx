@@ -3,7 +3,7 @@ import { FormControl, InputLabel, MenuItem, Select as MuiSelect, SelectProps } f
 import React, { useId } from 'react'
 
 export interface ISelectProps extends Omit<SelectProps, 'label' | 'labelId'> {
-  placeholder: string
+  placeholder?: string
   options: DropDownOption[]
 }
 export interface DropDownOption {
@@ -12,14 +12,25 @@ export interface DropDownOption {
 }
 // TODO: insert error notification inside this component
 const Select = React.forwardRef<HTMLDivElement, ISelectProps>((props, ref) => {
-  const { placeholder, options, ...rest } = props
+  const { placeholder, options, value, ...rest } = props
   const labelId = useId()
   return (
     <FormControl ref={ref} fullWidth>
       <InputLabel id={labelId}>{placeholder}</InputLabel>
-      <MuiSelect labelId={labelId} label={placeholder} {...rest}>
+      <MuiSelect
+        inputProps={{ onClick: (e) => e.stopPropagation() }}
+        labelId={labelId}
+        onClick={(e) => e.stopPropagation()}
+        label={placeholder}
+        {...rest}
+        value={value ?? ''}
+      >
         {options.map((option, index) => (
-          <MenuItem key={`${option.label}-${index}`} value={option.value}>
+          <MenuItem
+            key={`${option.label}-${index}`}
+            value={option.value}
+            onClick={(e) => e.stopPropagation()}
+          >
             {option.label}
           </MenuItem>
         ))}

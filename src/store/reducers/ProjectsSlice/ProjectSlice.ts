@@ -3,12 +3,15 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import {
   createProject,
   deleteTask,
+  getProjectById,
   getProjectLogo,
+  getTaskByProjectById,
   getTasksByProject,
   getUsersByProject,
   updateProject,
+  updateTask,
 } from './asyncThunks'
-import { ITaskWithPagination } from '@/http/services/TaskService'
+import { ITask, ITaskWithPagination } from '@/http/services/TaskService'
 import { merge } from 'lodash'
 import moment from 'moment'
 type InitialState = {
@@ -16,6 +19,7 @@ type InitialState = {
   projectsById: Record<string, IProject>
   usersByProject: Record<number, IUserInProjectWithPagination>
   tasksByProject: Record<number, ITaskWithPagination>
+  tasksByProjectById: Record<number, Record<number, ITask>>
   logos: Record<number, { id: number; imgSource: string }>
   preloaded: Record<string, string>
 }
@@ -26,6 +30,7 @@ const initialState: InitialState = {
   usersByProject: {},
   tasksByProject: {},
   preloaded: {},
+  tasksByProjectById: {},
 }
 
 const ProjectsSlice = createSlice({
@@ -50,6 +55,13 @@ const ProjectsSlice = createSlice({
     ) => {
       const { payload } = action
       state.tasksByProject[payload.project_id] = payload.tasks
+    },
+    setTaskByProjectById: (state, action: PayloadAction<{ task: ITask; projectId: string }>) => {
+      const { task, projectId } = action.payload
+      state.preloaded[`project-${projectId}.task-${task.id}`] = moment().format()
+      if (!state.tasksByProjectById[+projectId])
+        state.tasksByProjectById[+projectId] = { [task.id]: task }
+      else state.tasksByProjectById[+projectId][task.id] = task
     },
   },
   extraReducers: (builder) =>
@@ -98,8 +110,44 @@ const ProjectsSlice = createSlice({
         state.projects = state.projects.map((project) =>
           project.id === meta.arg.projectId ? { ...project, ...payload } : project
         )
+      })
+      .addCase(getProjectById.fulfilled, (state, action) => {
+        const { payload, meta } = action
+        state.projectsById[meta.arg.id] = payload
+      })
+      .addCase(getTaskByProjectById.fulfilled, (state, action) => {
+        const { payload, meta } = action
+        const projectId = meta.arg.projectId
+        const task = payload
+        state.preloaded[`project-${projectId}.task-${task.id}`] = moment().format()
+        if (!state.tasksByProjectById[+projectId])
+          state.tasksByProjectById[+projectId] = { [task.id]: task }
+        else state.tasksByProjectById[+projectId][task.id] = task
+      })
+      .addCase(updateTask.fulfilled, (state, action) => {
+        const { payload, meta } = action
+        const { projectId, taskId } = meta.arg
+        state.tasksByProjectById[+projectId][+taskId] = {
+          ...state.tasksByProject,
+          ...payload,
+        }
+        const taskIndex = state.tasksByProject[+projectId]?.data.findIndex(
+          (el) => el.id === +taskId
+        )
+        if (taskIndex !== undefined) {
+          state.tasksByProject[+projectId] = {
+            meta: state.tasksByProject[+projectId].meta,
+            data: state.tasksByProject[+projectId].data.map((el, index) => {
+              if (index === taskIndex) {
+                return { ...el, ...payload }
+              }
+              return el
+            }),
+          }
+        }
       }),
 })
 
-export const { setProjects, setProjectById, setTasks, deleteProjectById } = ProjectsSlice.actions
+export const { setProjects, setProjectById, setTasks, deleteProjectById, setTaskByProjectById } =
+  ProjectsSlice.actions
 export default ProjectsSlice.reducer

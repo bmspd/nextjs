@@ -44,24 +44,24 @@ const HeaderIconsControls: React.FC<HeaderIconsControls> = ({ id }) => {
   return (
     <div style={{ display: 'flex', gap: 4 }}>
       <Tooltip title="CREATE TASK" arrow>
-        <IconButton size="large">
-          <AddBoxRoundedIcon
-            fontSize="inherit"
-            onClick={() => {
-              dispatch(openModal(CreateTasksModal(formId)))
-            }}
-          />
+        <IconButton
+          size="large"
+          onClick={() => {
+            dispatch(openModal(CreateTasksModal(formId)))
+          }}
+        >
+          <AddBoxRoundedIcon fontSize="inherit" />
         </IconButton>
       </Tooltip>
 
       <Tooltip title="INVITE USER" arrow>
-        <IconButton size="large">
-          <GroupAddRoundedIcon
-            fontSize="inherit"
-            onClick={() => {
-              dispatch(openModal(InviteUserToProjectModal(formId)))
-            }}
-          />
+        <IconButton
+          size="large"
+          onClick={() => {
+            dispatch(openModal(InviteUserToProjectModal(formId)))
+          }}
+        >
+          <GroupAddRoundedIcon fontSize="inherit" />
         </IconButton>
       </Tooltip>
 
@@ -74,21 +74,21 @@ const HeaderIconsControls: React.FC<HeaderIconsControls> = ({ id }) => {
       </Tooltip>
 
       <Tooltip title="DELETE PROJECT" arrow>
-        <IconButton size="large">
-          <RemoveCircleRoundedIcon
-            fontSize="inherit"
-            onClick={() => {
-              dispatch(
-                openModal(
-                  ConfirmationModal({
-                    applyCb: deleteProjectCb,
-                    title: 'Delete project',
-                    text: 'Are you sure you want to delete this project?',
-                  })
-                )
+        <IconButton
+          size="large"
+          onClick={() => {
+            dispatch(
+              openModal(
+                ConfirmationModal({
+                  applyCb: deleteProjectCb,
+                  title: 'Delete project',
+                  text: 'Are you sure you want to delete this project?',
+                })
               )
-            }}
-          />
+            )
+          }}
+        >
+          <RemoveCircleRoundedIcon fontSize="inherit" />
         </IconButton>
       </Tooltip>
     </div>
