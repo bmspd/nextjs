@@ -76,7 +76,7 @@ export const Columns = (id: string): ColumnDef<ITask>[] => {
           type TCreator = ITask['creator']
           const value = props.getValue<TCreator>()
           return value ? (
-            <CustomCell>
+            <CustomCell isDefault>
               <UserProfile username={value.username} />
             </CustomCell>
           ) : null
@@ -89,7 +89,7 @@ export const Columns = (id: string): ColumnDef<ITask>[] => {
           type TExecutor = ITask['executor']
           const value = props.getValue<TExecutor>()
           return value ? (
-            <CustomCell>
+            <CustomCell isDefault>
               <UserProfile username={value.username} />
             </CustomCell>
           ) : null

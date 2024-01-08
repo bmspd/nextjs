@@ -17,6 +17,7 @@ import moment from 'moment'
 import ExecutorField from './components/ExecutorField'
 import StatusField from './components/StatusField'
 import PriorityField from './components/PriorityField'
+import TaskMainInfo from './components/TaskMainInfo'
 type TaskProps = {
   projectId: string
   taskId: string
@@ -35,15 +36,17 @@ const Task: React.FC<TaskProps> = ({ projectId, taskId, serverTask }) => {
   }, [])
   return (
     <div className={styles.taskPage}>
-      <MainBlock className={styles.taskMainInfo}>
-        <Typography variant="h5">{task?.title}</Typography>
-        <Typography>{task?.description}</Typography>
-      </MainBlock>
+      <TaskMainInfo
+        title={task?.title}
+        description={task?.description}
+        taskId={taskId}
+        projectId={projectId}
+      />
       <MainBlock className={styles.taskExtraInfo}>
         <StatusField projectId={projectId} taskId={taskId} status={task?.status} />
         <PriorityField projectId={projectId} taskId={taskId} priority={task?.priority} />
         <Typography>
-          Creator: <UserProfile username={task?.creator.username} />
+          Creator: <UserProfile styles={{ width: '100%' }} username={task?.creator.username} />
         </Typography>
         <ExecutorField projectId={projectId} taskId={taskId} executor={task?.executor} />
         <Typography>Created at: {moment(task?.createdAt).format('DD-MM-YYYY HH:mm')}</Typography>

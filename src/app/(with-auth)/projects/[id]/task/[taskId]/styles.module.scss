@@ -12,7 +12,18 @@
 }
 .taskMainInfo {
   width: 65%;
+  align-items: flex-start;
+  position: relative;
+  > div:not(.mainInfoHeader) {
+    width: 100%;
+  }
+  .mainInfoHeader {
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
 }
+
 .taskExtraInfo {
   width: 35%;
 }
