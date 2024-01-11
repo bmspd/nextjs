@@ -38,7 +38,7 @@ const Content: React.FC<{ formId: string | undefined; handleClose: () => void }>
       .then(() => {
         dispatch(
           enqueueSnackbar({
-            message: 'User successfullu invited',
+            message: 'User successfully invited',
             options: {
               key: uniqueId(),
               variant: SNACKBAR_TYPES.SUCCESS,

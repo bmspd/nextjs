@@ -9,6 +9,7 @@ export type InitialProfileState = {
   username: string
   email: string
   password?: null
+  id: number
 }
 const initialState: InitialProfileState = {
   emailVerified: false,
@@ -17,6 +18,7 @@ const initialState: InitialProfileState = {
   secondName: null,
   username: '',
   email: '',
+  id: -1,
 }
 
 const ProfileSlice = createSlice({

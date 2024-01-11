@@ -13,6 +13,7 @@ import TasksService, {
   ITaskWithPagination,
   IUpdateTaskBody,
 } from '@/http/services/TaskService'
+import { IdType } from '@/types/common'
 import { PaginationParams } from '@/types/pagination'
 import { createAsyncThunk } from '@reduxjs/toolkit'
 
@@ -33,7 +34,7 @@ export const getProjectById = createAsyncThunk(
 )
 export const getTaskByProjectById = createAsyncThunk(
   'projects/getTaskByProjectById',
-  tryCatch<{ projectId: string | number; taskId: string | number }>(async (data) => {
+  tryCatch<{ projectId: IdType; taskId: IdType }>(async (data) => {
     const response = await TasksService.getTaskById(+data.projectId, +data.taskId)
     return response.data
   })
@@ -58,17 +59,15 @@ export const getProjectLogo = createAsyncThunk(
 )
 export const getTasksByProject = createAsyncThunk(
   'projects/getTasksByProject',
-  tryCatch<{ projectId: number | string; params: PaginationParams }, ITaskWithPagination>(
-    async (data) => {
-      const response = await ProjectsService.getTasksByProject(data.projectId, data.params)
-      return response.data
-    }
-  )
+  tryCatch<{ projectId: IdType; params: PaginationParams }, ITaskWithPagination>(async (data) => {
+    const response = await ProjectsService.getTasksByProject(data.projectId, data.params)
+    return response.data
+  })
 )
 
 export const createTask = createAsyncThunk(
   'projects/createTask',
-  tryCatch<{ projectId: number | string; body: ICreateTaskBody }>(async (data) => {
+  tryCatch<{ projectId: IdType; body: ICreateTaskBody }>(async (data) => {
     const response = await TasksService.createNewTask(data.projectId, data.body)
     return response.data
   })
@@ -76,7 +75,7 @@ export const createTask = createAsyncThunk(
 
 export const deleteTask = createAsyncThunk(
   'projects/deleteTask',
-  tryCatch<{ projectId: string | number; taskId: string | number }>(async (data) => {
+  tryCatch<{ projectId: IdType; taskId: IdType }>(async (data) => {
     const response = await TasksService.deleteTask(data.projectId, data.taskId)
     return response.data
   })
@@ -84,7 +83,7 @@ export const deleteTask = createAsyncThunk(
 
 export const updateTask = createAsyncThunk(
   'projects/updateTask',
-  tryCatch<{ projectId: string | number; taskId: string | number; data: IUpdateTaskBody }>(
+  tryCatch<{ projectId: IdType; taskId: IdType; data: IUpdateTaskBody }>(
     async ({ projectId, taskId, data }) => {
       const response = await TasksService.updateTask(projectId, taskId, data)
       return response.data
@@ -95,7 +94,7 @@ export const updateTask = createAsyncThunk(
 export const getUsersByProject = createAsyncThunk(
   'projects/getUsersByProject',
   tryCatch<
-    { projectId: number | string; params: PaginationParams; timestamp?: number },
+    { projectId: IdType; params: PaginationParams; timestamp?: number },
     IUserInProjectWithPagination
   >(async (data) => {
     const response = await ProjectsService.getUsersByProject(data.projectId, data.params)
@@ -105,10 +104,18 @@ export const getUsersByProject = createAsyncThunk(
     return response.data
   })
 )
-
+export const getUsersForTableByProject = createAsyncThunk(
+  'projects/getUsersForTableByProject',
+  tryCatch<{ projectId: IdType; params: PaginationParams }, IUserInProjectWithPagination>(
+    async (data) => {
+      const response = await ProjectsService.getUsersByProject(data.projectId, data.params)
+      return response.data
+    }
+  )
+)
 export const inviteUserToProject = createAsyncThunk(
   'projects/inviteUserToProject',
-  tryCatch<{ projectId: number | string; email: string }>(async (data) => {
+  tryCatch<{ projectId: IdType; email: string }>(async (data) => {
     const response = await ProjectsService.inviteUserToProject(data.projectId, {
       email: data.email,
     })
@@ -118,8 +125,16 @@ export const inviteUserToProject = createAsyncThunk(
 
 export const updateProject = createAsyncThunk(
   'projects/updateProject',
-  tryCatch<{ projectId: number | string; data: UpdateProjectBody }>(async (data) => {
+  tryCatch<{ projectId: IdType; data: UpdateProjectBody }>(async (data) => {
     const response = await ProjectsService.updateProject(data.projectId, data.data)
+    return response.data
+  })
+)
+
+export const quitProject = createAsyncThunk(
+  'projects/quitProject',
+  tryCatch<{ projectId: IdType }>(async (data) => {
+    const response = await ProjectsService.quitProject(data.projectId)
     return response.data
   })
 )

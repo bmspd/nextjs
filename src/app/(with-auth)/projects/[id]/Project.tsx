@@ -17,6 +17,7 @@ import Image from 'next/image'
 import { IProject } from '@/http/services/ProjectsService'
 import HeaderIconsControls from './components/HeaderIconsControls'
 import { Columns } from './columns'
+import { selectProfile } from '@/store/reducers/ProfileSlice/selectors'
 const Project: React.FC<{
   id: string
   serverTasks: ITaskWithPagination
@@ -26,6 +27,7 @@ const Project: React.FC<{
   const project = useTypedSelector(selectProjectById(+id))
   const projectLogo = useTypedSelector(selectProjectLogo(+id))
   const preloadedProject = useTypedSelector(selectPreloaded(`project.${id}`))
+  const profile = useTypedSelector(selectProfile)
   const tasksData = tasks?.data ?? []
   const tasksPagination = tasks?.meta?.pagination
   const dispatch = useTypedDispatch()
@@ -62,6 +64,9 @@ const Project: React.FC<{
         </div>
         <HeaderIconsControls id={id} />
       </MainBlock>
+      <div style={{ marginTop: '32px' }}>
+        {project?.creator?.id === profile.id ? 'YOU ARE THE OWNER' : 'YOU ARE JUST A MEMBER'}
+      </div>
       <MainBlock sx={{ marginTop: 4, padding: 0 }}>
         <Table<ITask>
           data={tasksData}

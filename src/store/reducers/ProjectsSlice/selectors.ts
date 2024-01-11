@@ -1,5 +1,6 @@
 import { ITask } from '@/http/services/TaskService'
 import { RootState } from '@/store'
+import { IdType } from '@/types/common'
 //import { createSelector } from '@reduxjs/toolkit'
 
 // export const selectProjects = createSelector(
@@ -23,7 +24,8 @@ export const selectTasksByProject = (id: number) => (state: RootState) =>
 
 export const selectUsersByProject = (id: number) => (state: RootState) =>
   state.projects.usersByProject[id]
-
+export const selectUsersForTableByProject = (id: IdType) => (state: RootState) =>
+  state.projects.usersForTableByProjectId[id]
 export const selectProjectById = (id: number) => (state: RootState) =>
   state.projects.projectsById[id]
 

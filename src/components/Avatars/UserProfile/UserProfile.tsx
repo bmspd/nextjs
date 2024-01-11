@@ -1,6 +1,7 @@
 import AccountCircleRounded from '@mui/icons-material/AccountCircleRounded'
 import { IconButton, Tooltip, TooltipProps, Typography } from '@mui/material'
 import React from 'react'
+import CSSstyles from './styles.module.scss'
 type UserProfileProps = {
   username?: string
   TooltipProps?: Partial<TooltipProps>
@@ -10,14 +11,14 @@ const UserProfile: React.FC<UserProfileProps> = ({ username, TooltipProps, style
   return (
     <Tooltip title={<Typography>{username}</Typography>} placement="top" arrow {...TooltipProps}>
       {username ? (
-        <div style={{ display: 'inline-block', ...styles }}>
+        <div className={CSSstyles.userProfile} style={{ ...styles }}>
           <IconButton size="small">
             <AccountCircleRounded fontSize="large" />
           </IconButton>
           {username}
         </div>
       ) : (
-        <div>No user chosen</div>
+        <div className={CSSstyles.userProfile}>No user chosen</div>
       )}
     </Tooltip>
   )

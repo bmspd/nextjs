@@ -8,12 +8,14 @@ import {
   getTaskByProjectById,
   getTasksByProject,
   getUsersByProject,
+  getUsersForTableByProject,
   updateProject,
   updateTask,
 } from './asyncThunks'
 import { ITask, ITaskWithPagination } from '@/http/services/TaskService'
 import { merge } from 'lodash'
 import moment from 'moment'
+import { IdType } from '@/types/common'
 type InitialState = {
   projects: IProject[]
   projectsById: Record<string, IProject>
@@ -22,6 +24,7 @@ type InitialState = {
   tasksByProjectById: Record<number, Record<number, ITask>>
   logos: Record<number, { id: number; imgSource: string }>
   preloaded: Record<string, string>
+  usersForTableByProjectId: Record<IdType, IUserInProjectWithPagination>
 }
 const initialState: InitialState = {
   projects: [],
@@ -31,6 +34,7 @@ const initialState: InitialState = {
   tasksByProject: {},
   preloaded: {},
   tasksByProjectById: {},
+  usersForTableByProjectId: {},
 }
 
 const ProjectsSlice = createSlice({
@@ -48,6 +52,14 @@ const ProjectsSlice = createSlice({
     },
     deleteProjectById: (state, action: PayloadAction<number>) => {
       state.projects = state.projects.filter((project) => project.id !== action.payload)
+    },
+    setUsersInProject: (
+      state,
+      action: PayloadAction<{ users: IUserInProjectWithPagination; projectId: IdType }>
+    ) => {
+      const { payload } = action
+      state.preloaded[`users.${payload.projectId}`] = moment().format()
+      state.usersForTableByProjectId[payload.projectId] = payload.users
     },
     setTasks: (
       state,
@@ -145,9 +157,20 @@ const ProjectsSlice = createSlice({
             }),
           }
         }
+      })
+      .addCase(getUsersForTableByProject.fulfilled, (state, action) => {
+        const { payload, meta } = action
+        const { projectId } = meta.arg
+        state.usersForTableByProjectId[projectId] = payload
       }),
 })
 
-export const { setProjects, setProjectById, setTasks, deleteProjectById, setTaskByProjectById } =
-  ProjectsSlice.actions
+export const {
+  setProjects,
+  setProjectById,
+  setTasks,
+  deleteProjectById,
+  setTaskByProjectById,
+  setUsersInProject,
+} = ProjectsSlice.actions
 export default ProjectsSlice.reducer

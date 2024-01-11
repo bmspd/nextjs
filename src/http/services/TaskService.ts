@@ -6,6 +6,7 @@ import { DataWithPagination } from '@/types/pagination'
 export type IUser = {
   id: number
   username: string
+  email?: string
 }
 export interface ITask {
   id: number

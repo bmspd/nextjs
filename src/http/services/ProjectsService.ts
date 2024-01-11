@@ -2,6 +2,8 @@ import { AxiosResponse } from 'axios'
 import $api from '..'
 import { DataWithPagination, PaginationParams } from '@/types/pagination'
 import { PROJECT_PATTERN_COLORS, PROJECT_PATTERN_TYPES } from '@/constants/projects.constants'
+import { IUser } from './TaskService'
+import { IdType } from '@/types/common'
 
 export interface IUserInProject {
   id: number
@@ -15,6 +17,8 @@ export interface IProject {
   logo: null | ProjectLogo
   pattern_type: PROJECT_PATTERN_TYPES | null
   pattern_color: PROJECT_PATTERN_COLORS | null
+  creator_id: number
+  creator: IUser
 }
 
 export type ProjectLogo = {
@@ -22,7 +26,10 @@ export type ProjectLogo = {
   original_name: string
   imgSource?: string | null
 }
-export type CreateProjectBody = Omit<IProject, 'id' | 'logo' | 'pattern_type' | 'pattern_color'> & {
+export type CreateProjectBody = Omit<
+  IProject,
+  'id' | 'logo' | 'pattern_type' | 'pattern_color' | 'creator_id' | 'creator'
+> & {
   image?: File | null
 } & Partial<Pick<IProject, 'pattern_color' | 'pattern_type'>>
 export type UpdateProjectBody = Omit<Partial<CreateProjectBody>, 'id'> & { same_logo?: boolean }
@@ -49,23 +56,26 @@ export default class ProjectsService {
     return $api.get<AxiosResponse>(`/projects/${data.id}/logo`, { responseType: 'blob' })
   }
   static async getTasksByProject(
-    projectId: string | number,
+    projectId: IdType,
     params: PaginationParams
   ): Promise<AxiosResponse> {
     return $api.get<AxiosResponse>(`/projects/${projectId}/tasks`, { params: params })
   }
   static async getUsersByProject(
-    projectId: string | number,
+    projectId: IdType,
     params: PaginationParams
   ): Promise<AxiosResponse> {
     return $api.get<AxiosResponse>(`/projects/${projectId}/users`, { params: params })
   }
-  static async inviteUserToProject(projectId: string | number, data: InviteUserToProjectBody) {
+  static async inviteUserToProject(projectId: IdType, data: InviteUserToProjectBody) {
     return $api.patch(`/projects/${projectId}/invite`, data)
   }
-  static async updateProject(projectId: string | number, data: UpdateProjectBody) {
+  static async updateProject(projectId: IdType, data: UpdateProjectBody) {
     return $api.patch<AxiosResponse>(`/projects/${projectId}`, data, {
       headers: { 'Content-Type': 'multipart/form-data' },
     })
+  }
+  static async quitProject(projectId: IdType) {
+    return $api.get<{ message: string }>(`/projects/${projectId}/quit`)
   }
 }

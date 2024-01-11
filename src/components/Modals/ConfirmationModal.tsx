@@ -13,7 +13,8 @@ const ApplyBtn: React.FC<{
   applyCb?: () => void
   handleClose: () => void
   deleteFunc?: string
-}> = ({ applyCb, handleClose, deleteFunc }) => {
+  buttonProps?: TButtonProps
+}> = ({ applyCb, handleClose, deleteFunc, buttonProps }) => {
   const isDeleting = useTypedSelector(selectSpecificLoading(deleteFunc ?? ''))
   return (
     <Button
@@ -25,7 +26,7 @@ const ApplyBtn: React.FC<{
       disabled={isDeleting}
       variant="contained"
     >
-      Delete
+      {buttonProps?.text ? buttonProps.text : 'Delete'}
     </Button>
   )
 }
@@ -34,17 +35,20 @@ const CancelBtn: React.FC<{ handleClose: () => void }> = ({ handleClose }) => (
     Cancel
   </Button>
 )
+type TButtonProps = { text?: string }
 type TConfirmationModal = {
   applyCb?: () => void
   text?: string
   title?: string
   deleteFunc?: string
+  buttonsProps?: { apply?: TButtonProps; cancel?: TButtonProps }
 }
 export const ConfirmationModal = ({
   applyCb,
   text,
   title,
   deleteFunc,
+  buttonsProps,
 }: TConfirmationModal = {}): DialogModalProps => {
   return {
     content: () => <Content text={text} />,
@@ -54,6 +58,7 @@ export const ConfirmationModal = ({
         applyCb={applyCb}
         handleClose={handleClose}
         deleteFunc={deleteFunc}
+        buttonProps={buttonsProps?.apply}
       />,
       <CancelBtn key="cancel-btn" handleClose={handleClose} />,
     ],
