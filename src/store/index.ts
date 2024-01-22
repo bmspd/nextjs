@@ -8,6 +8,7 @@ import NotificationsSlice from './reducers/NotificationsSlice/NotificationsSlice
 import ProfileSlice from './reducers/ProfileSlice/ProfileSlice'
 import ProjectSlice from './reducers/ProjectsSlice/ProjectSlice'
 import UserSlice from './reducers/UserSlice/UserSlice'
+import { useStore } from 'react-redux'
 
 const rootReducer = combineReducers({
   auth: AuthSlice,
@@ -41,10 +42,8 @@ export const store = configureStore({
 })
 
 export type AppDispatch = typeof store.dispatch
-// was <typeof store.getState> but it makes an error with circular references
 export type RootState = ReturnType<typeof rootReducer>
-//export type AppStore = ReturnType<typeof store>
 export type AppThunk<ReturnType = void> = ThunkAction<ReturnType, RootState, unknown, Action>
-//todo need some wrapper for normal ssr state manager work
-/*const makeStore = () => store
-export const storeWrapper = createWrapper<AppStore>(makeStore)*/
+export const makeStore = () => store
+export type AppStore = ReturnType<typeof makeStore>
+export const useAppStore: () => AppStore = useStore

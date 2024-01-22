@@ -1,11 +1,8 @@
 'use client'
-import { useEffect, useCallback } from 'react'
+import { useCallback, useRef } from 'react'
 import { useTypedDispatch, useTypedSelector } from '@/hooks/typedStoreHooks'
 import { IUserInProject, IUserInProjectWithPagination } from '@/http/services/ProjectsService'
-import {
-  selectPreloaded,
-  selectUsersForTableByProject,
-} from '@/store/reducers/ProjectsSlice/selectors'
+import { selectUsersForTableByProject } from '@/store/reducers/ProjectsSlice/selectors'
 import { setUsersInProject } from '@/store/reducers/ProjectsSlice/ProjectSlice'
 import MainBlock from '@/components/Blocks/MainBlock'
 import Table from '@/components/Table/Table'
@@ -17,9 +14,12 @@ const Users: React.FC<{ id: string; serverUsers: IUserInProjectWithPagination }>
   serverUsers,
 }) => {
   const dispatch = useTypedDispatch()
+  const initialized = useRef(false)
+  if (!initialized.current) {
+    dispatch(setUsersInProject({ users: serverUsers, projectId: id }))
+  }
   const usersInProject = useTypedSelector(selectUsersForTableByProject(id))
   const usersData = usersInProject?.data ?? []
-  const preloadedUsers = useTypedSelector(selectPreloaded(`projects.${id}`))
   const onPaginationChange = useCallback((pageNumber: number, rowsPerPage: number) => {
     dispatch(
       getUsersForTableByProject({
@@ -29,11 +29,7 @@ const Users: React.FC<{ id: string; serverUsers: IUserInProjectWithPagination }>
     )
   }, [])
   const columns = Columns(id)
-  useEffect(() => {
-    if (!preloadedUsers) {
-      dispatch(setUsersInProject({ users: serverUsers, projectId: id }))
-    }
-  }, [])
+
   return (
     <>
       <MainBlock>

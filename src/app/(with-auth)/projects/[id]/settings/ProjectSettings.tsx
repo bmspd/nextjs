@@ -3,14 +3,10 @@ import MainBlock from '@/components/Blocks/MainBlock'
 import { useTypedDispatch, useTypedSelector } from '@/hooks/typedStoreHooks'
 import { IProject, UpdateProjectBody } from '@/http/services/ProjectsService'
 import { setProjectById } from '@/store/reducers/ProjectsSlice/ProjectSlice'
-import {
-  selectPreloaded,
-  selectProjectById,
-  selectProjectLogo,
-} from '@/store/reducers/ProjectsSlice/selectors'
+import { selectProjectById, selectProjectLogo } from '@/store/reducers/ProjectsSlice/selectors'
 import { updateProjectSchema } from '@/validation/project.validations'
 import { yupResolver } from '@hookform/resolvers/yup'
-import React, { useEffect, useState, useMemo } from 'react'
+import React, { useEffect, useState, useMemo, useRef } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 import styles from './style.module.scss'
@@ -28,20 +24,20 @@ import { enqueueSnackbar } from '@/store/reducers/NotificationsSlice/Notificatio
 import { uniqueId } from 'lodash'
 import { SNACKBAR_TYPES } from '@/types/notistack'
 const ProjectSettings = ({ id, serverProject }: { id: string; serverProject: IProject }) => {
-  const preloadedProject = useTypedSelector(selectPreloaded(`project.${id}`))
   const project = useTypedSelector(selectProjectById(+id))
   const projectLogo = useTypedSelector(selectProjectLogo(+id))
   const dispatch = useTypedDispatch()
+  const initialized = useRef(false)
+  if (!initialized.current) {
+    initialized.current = true
+    if (!project) dispatch(setProjectById(serverProject))
+    if (serverProject.logo?.id && !projectLogo) dispatch(getProjectLogo({ id: serverProject.id }))
+  }
   const didMount = useDidMount()
   const filesState = useState<File[]>([])
   const logoIdentifier = useMemo(() => uuidv4(), [])
   const [files, setFiles] = filesState
-  useEffect(() => {
-    if (!preloadedProject) {
-      dispatch(setProjectById(serverProject))
-      if (serverProject.logo?.id) dispatch(getProjectLogo({ id: serverProject.id }))
-    }
-  }, [])
+
   useEffect(() => {
     if (didMount && !projectLogo) return
     if (projectLogo) {
@@ -53,17 +49,18 @@ const ProjectSettings = ({ id, serverProject }: { id: string; serverProject: IPr
       setFiles([])
     }
   }, [projectLogo])
+
   const {
     control,
     handleSubmit,
     formState: { errors },
   } = useForm({
     defaultValues: {
-      name: !preloadedProject ? serverProject?.name : project?.name,
+      name: project?.name ?? serverProject?.name,
       // при ассинхронной смене значения - в Select value не подставляется
       // чтобы не ставить useEffect с setValue решил так
-      pattern_color: !preloadedProject ? serverProject?.pattern_color : project?.pattern_color,
-      pattern_type: !preloadedProject ? serverProject?.pattern_type : project?.pattern_type,
+      pattern_color: project?.pattern_color ?? serverProject?.pattern_color,
+      pattern_type: project?.pattern_type ?? serverProject?.pattern_type,
     },
     resolver: yupResolver(updateProjectSchema),
   })

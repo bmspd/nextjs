@@ -5,12 +5,11 @@ import { ITask } from '@/http/services/TaskService'
 import { setTaskByProjectById } from '@/store/reducers/ProjectsSlice/ProjectSlice'
 import { getProjectById } from '@/store/reducers/ProjectsSlice/asyncThunks'
 import {
-  selectPreloaded,
   selectProjectById,
   selectTaskByProjectById,
 } from '@/store/reducers/ProjectsSlice/selectors'
 import { Typography } from '@mui/material'
-import React, { useEffect } from 'react'
+import React, { useRef } from 'react'
 import styles from './styles.module.scss'
 import UserProfile from '@/components/Avatars/UserProfile/UserProfile'
 import moment from 'moment'
@@ -27,13 +26,15 @@ type TaskProps = {
 const Task: React.FC<TaskProps> = ({ projectId, taskId, serverTask }) => {
   const project = useTypedSelector(selectProjectById(+projectId))
   const task = useTypedSelector(selectTaskByProjectById(+projectId, +taskId))
-  const preloadedTask = useTypedSelector(selectPreloaded(`project-${projectId}.task-${taskId}`))
   const dispatch = useTypedDispatch()
-  useEffect(() => {
+  const initialized = useRef(false)
+  if (!initialized.current) {
+    initialized.current = true
     // preload project data if it's not still there, probably need to load logo too...
-    if (!preloadedTask) dispatch(setTaskByProjectById({ projectId, task: serverTask }))
+    // не очень понятно, как это работает, но лишний раз сюда заходит
+    if (!task) dispatch(setTaskByProjectById({ projectId, task: serverTask }))
     if (!project) dispatch(getProjectById({ id: +projectId }))
-  }, [])
+  }
   return (
     <div className={styles.taskPage}>
       <TaskMainInfo

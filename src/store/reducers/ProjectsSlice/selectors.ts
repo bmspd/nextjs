@@ -8,10 +8,7 @@ import { IdType } from '@/types/common'
 //   (projects) => Object.values(projects)
 // )
 export const selectProjects = (state: RootState) => state.projects.projects
-export const selectPreloaded =
-  (preloadProp: string) =>
-  (state: RootState): string | undefined =>
-    state.projects.preloaded[preloadProp]
+
 export const selectProject = (id: number) => (state: RootState) =>
   selectProjects(state).find((project) => project.id === id)
 

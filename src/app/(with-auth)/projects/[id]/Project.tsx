@@ -1,12 +1,11 @@
 'use client'
-import React, { useEffect, useCallback } from 'react'
+import React, { useCallback, useRef } from 'react'
 import MainBlock from '@/components/Blocks/MainBlock'
 import { useTypedDispatch, useTypedSelector } from '@/hooks/typedStoreHooks'
 import { ITask, ITaskWithPagination } from '@/http/services/TaskService'
 import { setProjectById, setTasks } from '@/store/reducers/ProjectsSlice/ProjectSlice'
 import noImage from '/public/assets/images/no-image.jpg'
 import {
-  selectPreloaded,
   selectProjectById,
   selectProjectLogo,
   selectTasksByProject,
@@ -23,14 +22,20 @@ const Project: React.FC<{
   serverTasks: ITaskWithPagination
   serverProject: IProject
 }> = ({ id, serverTasks, serverProject }) => {
+  const dispatch = useTypedDispatch()
+  const projectLogo = useTypedSelector(selectProjectLogo(+id))
+  const initialized = useRef(false)
+  if (!initialized.current) {
+    initialized.current = true
+    dispatch(setProjectById(serverProject))
+    dispatch(setTasks({ project_id: +id, tasks: serverTasks }))
+    if (serverProject.logo?.id && !projectLogo) dispatch(getProjectLogo({ id: serverProject.id }))
+  }
   const tasks = useTypedSelector(selectTasksByProject(+id))
   const project = useTypedSelector(selectProjectById(+id))
-  const projectLogo = useTypedSelector(selectProjectLogo(+id))
-  const preloadedProject = useTypedSelector(selectPreloaded(`project.${id}`))
   const profile = useTypedSelector(selectProfile)
   const tasksData = tasks?.data ?? []
   const tasksPagination = tasks?.meta?.pagination
-  const dispatch = useTypedDispatch()
   const onPaginationChange = useCallback(
     (pageNumber: number, rowsPerPage: number) => {
       dispatch(
@@ -39,14 +44,6 @@ const Project: React.FC<{
     },
     [id]
   )
-  useEffect(() => {
-    if (!preloadedProject) {
-      dispatch(setProjectById(serverProject))
-      dispatch(setTasks({ project_id: +id, tasks: serverTasks }))
-      if (serverProject.logo?.id) dispatch(getProjectLogo({ id: serverProject.id }))
-    }
-  }, [])
-
   const columns = Columns(id)
   return (
     <>

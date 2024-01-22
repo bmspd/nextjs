@@ -1,12 +1,8 @@
 'use client'
-import React, { useEffect, useId, useMemo } from 'react'
+import React, { useId, useMemo, useRef } from 'react'
 import MainBlock from '@/components/Blocks/MainBlock'
 import { useTypedDispatch, useTypedSelector } from '@/hooks/typedStoreHooks'
-import {
-  selectPreloaded,
-  selectProjectLogos,
-  selectProjects,
-} from '@/store/reducers/ProjectsSlice/selectors'
+import { selectProjectLogos, selectProjects } from '@/store/reducers/ProjectsSlice/selectors'
 import { Button } from '@mui/material'
 import { openModal } from '@/store/reducers/ModalSlice/ModalSlice'
 import { CreateProjectModal } from '@/components/Modals/CreateProjectModal'
@@ -29,22 +25,21 @@ const formProjectStyles = (view: TProjectsViewVariants): React.CSSProperties => 
 }
 const Projects: React.FC<{ serverProjects: IProject[] }> = ({ serverProjects }) => {
   const projects = useTypedSelector(selectProjects)
-  const preloadedProjects = useTypedSelector(selectPreloaded('projects'))
-  const projectsView = useTypedSelector(selectProjectsView)
-  const projectsLogos = useTypedSelector(selectProjectLogos)
-  const projectStyles = useMemo(() => formProjectStyles(projectsView), [projectsView])
   const dispatch = useTypedDispatch()
+  const projectsLogos = useTypedSelector(selectProjectLogos)
+  const initialized = useRef(false)
+  if (!initialized.current) {
+    initialized.current = true
+    dispatch(setProjects(serverProjects))
+    serverProjects.forEach((el) => {
+      if (el.logo && !projectsLogos[el.id]) {
+        dispatch(getProjectLogo({ id: el.id }))
+      }
+    })
+  }
+  const projectsView = useTypedSelector(selectProjectsView)
+  const projectStyles = useMemo(() => formProjectStyles(projectsView), [projectsView])
   const formId = useId()
-  useEffect(() => {
-    if (!preloadedProjects) {
-      dispatch(setProjects(serverProjects))
-      serverProjects.forEach((el) => {
-        if (el.logo && !projectsLogos[el.id]) {
-          dispatch(getProjectLogo({ id: el.id }))
-        }
-      })
-    }
-  }, [])
   return (
     <div>
       <MainBlock>

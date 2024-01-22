@@ -14,7 +14,6 @@ import {
 } from './asyncThunks'
 import { ITask, ITaskWithPagination } from '@/http/services/TaskService'
 import { merge } from 'lodash'
-import moment from 'moment'
 import { IdType } from '@/types/common'
 type InitialState = {
   projects: IProject[]
@@ -23,7 +22,6 @@ type InitialState = {
   tasksByProject: Record<number, ITaskWithPagination>
   tasksByProjectById: Record<number, Record<number, ITask>>
   logos: Record<number, { id: number; imgSource: string }>
-  preloaded: Record<string, string>
   usersForTableByProjectId: Record<IdType, IUserInProjectWithPagination>
 }
 const initialState: InitialState = {
@@ -32,7 +30,6 @@ const initialState: InitialState = {
   logos: {},
   usersByProject: {},
   tasksByProject: {},
-  preloaded: {},
   tasksByProjectById: {},
   usersForTableByProjectId: {},
 }
@@ -42,12 +39,10 @@ const ProjectsSlice = createSlice({
   initialState,
   reducers: {
     setProjects: (state, action: PayloadAction<IProject[]>) => {
-      state.preloaded['projects'] = moment().format()
       state.projects = action.payload
     },
     setProjectById: (state, action: PayloadAction<IProject>) => {
       const project = action.payload
-      state.preloaded[`project.${project.id}`] = moment().format()
       state.projectsById[project.id] = action.payload
     },
     deleteProjectById: (state, action: PayloadAction<number>) => {
@@ -58,7 +53,6 @@ const ProjectsSlice = createSlice({
       action: PayloadAction<{ users: IUserInProjectWithPagination; projectId: IdType }>
     ) => {
       const { payload } = action
-      state.preloaded[`users.${payload.projectId}`] = moment().format()
       state.usersForTableByProjectId[payload.projectId] = payload.users
     },
     setTasks: (
@@ -70,7 +64,6 @@ const ProjectsSlice = createSlice({
     },
     setTaskByProjectById: (state, action: PayloadAction<{ task: ITask; projectId: string }>) => {
       const { task, projectId } = action.payload
-      state.preloaded[`project-${projectId}.task-${task.id}`] = moment().format()
       if (!state.tasksByProjectById[+projectId])
         state.tasksByProjectById[+projectId] = { [task.id]: task }
       else state.tasksByProjectById[+projectId][task.id] = task
@@ -131,7 +124,6 @@ const ProjectsSlice = createSlice({
         const { payload, meta } = action
         const projectId = meta.arg.projectId
         const task = payload
-        state.preloaded[`project-${projectId}.task-${task.id}`] = moment().format()
         if (!state.tasksByProjectById[+projectId])
           state.tasksByProjectById[+projectId] = { [task.id]: task }
         else state.tasksByProjectById[+projectId][task.id] = task
