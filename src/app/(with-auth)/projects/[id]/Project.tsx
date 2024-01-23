@@ -24,15 +24,15 @@ const Project: React.FC<{
 }> = ({ id, serverTasks, serverProject }) => {
   const dispatch = useTypedDispatch()
   const projectLogo = useTypedSelector(selectProjectLogo(+id))
+  const tasks = useTypedSelector(selectTasksByProject(+id))
+  const project = useTypedSelector(selectProjectById(+id))
   const initialized = useRef(false)
   if (!initialized.current) {
     initialized.current = true
-    dispatch(setProjectById(serverProject))
-    dispatch(setTasks({ project_id: +id, tasks: serverTasks }))
+    if (!project) dispatch(setProjectById(serverProject))
+    if (!tasks) dispatch(setTasks({ project_id: +id, tasks: serverTasks }))
     if (serverProject.logo?.id && !projectLogo) dispatch(getProjectLogo({ id: serverProject.id }))
   }
-  const tasks = useTypedSelector(selectTasksByProject(+id))
-  const project = useTypedSelector(selectProjectById(+id))
   const profile = useTypedSelector(selectProfile)
   const tasksData = tasks?.data ?? []
   const tasksPagination = tasks?.meta?.pagination

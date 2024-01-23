@@ -59,8 +59,12 @@ const ProjectSettings = ({ id, serverProject }: { id: string; serverProject: IPr
       name: project?.name ?? serverProject?.name,
       // при ассинхронной смене значения - в Select value не подставляется
       // чтобы не ставить useEffect с setValue решил так
-      pattern_color: project?.pattern_color ?? serverProject?.pattern_color,
-      pattern_type: project?.pattern_type ?? serverProject?.pattern_type,
+      pattern_color:
+        project?.pattern_color === undefined
+          ? serverProject?.pattern_color
+          : project?.pattern_color,
+      pattern_type:
+        project?.pattern_type === undefined ? serverProject?.pattern_type : project?.pattern_type,
     },
     resolver: yupResolver(updateProjectSchema),
   })
@@ -111,6 +115,7 @@ const ProjectSettings = ({ id, serverProject }: { id: string; serverProject: IPr
                 {...field}
                 placeholder="Background pattern"
                 options={PROJECT_PATTERNS_TYPES_OPTIONS}
+                isClearable
               />
             )}
           />
@@ -122,6 +127,7 @@ const ProjectSettings = ({ id, serverProject }: { id: string; serverProject: IPr
                 {...field}
                 placeholder="Background color"
                 options={PROJECT_PATTERNS_COLORS_OPTIONS}
+                isClearable
               />
             )}
           />

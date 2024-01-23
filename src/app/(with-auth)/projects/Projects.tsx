@@ -30,7 +30,7 @@ const Projects: React.FC<{ serverProjects: IProject[] }> = ({ serverProjects }) 
   const initialized = useRef(false)
   if (!initialized.current) {
     initialized.current = true
-    dispatch(setProjects(serverProjects))
+    if (!projects.length) dispatch(setProjects(serverProjects))
     serverProjects.forEach((el) => {
       if (el.logo && !projectsLogos[el.id]) {
         dispatch(getProjectLogo({ id: el.id }))

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { tryCatch } from '@/decorators'
 import ProjectsService, {
   CreateProjectBody,
@@ -126,6 +127,10 @@ export const inviteUserToProject = createAsyncThunk(
 export const updateProject = createAsyncThunk(
   'projects/updateProject',
   tryCatch<{ projectId: IdType; data: UpdateProjectBody }>(async (data) => {
+    //@ts-ignore
+    if (data.data?.pattern_color === null) data.data.pattern_color = ''
+    //@ts-ignore
+    if (data.data?.pattern_type === null) data.data.pattern_type = ''
     const response = await ProjectsService.updateProject(data.projectId, data.data)
     return response.data
   })
