@@ -1,13 +1,16 @@
 import axios from 'axios'
+import { getCsrfToken, getSession } from 'next-auth/react'
 
 const $api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BACKEND_BASEURL,
 })
 
+export const setAccessToken = (token: string) => {
+  $api.defaults.headers.common['Authorization'] = `Bearer ${token}`
+}
+
 $api.defaults.withCredentials = true
-$api.interceptors.request.use((config) => {
-  config.headers.Authorization =
-    config.headers.Authorization ?? `Bearer ${localStorage.getItem('accessToken')}`
+$api.interceptors.request.use(async (config) => {
   return config
 })
 $api.interceptors.response.use(
@@ -15,38 +18,32 @@ $api.interceptors.response.use(
     return response
   },
   async (error) => {
-    // for server-side token refreshing
-    const serverSideRefreshToken =
-      error.request?.getHeaders && error.request?.getHeaders()?.['server-side-refresh']
-    if (
-      error.response?.status === 401 &&
-      (serverSideRefreshToken || localStorage.getItem('refreshToken'))
-    ) {
-      let apiResponse
-      try {
-        apiResponse = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_BASEURL}/auth/refresh`, {
-          headers: {
-            Authorization: `Bearer ${
-              serverSideRefreshToken || localStorage.getItem('refreshToken')
-            }`,
-          },
-        })
-      } catch (e) {
-        if (typeof window !== 'undefined') {
-          localStorage.removeItem('refreshToken')
-          localStorage.removeItem('accessToken')
-        }
-        throw e
+    const originalRequest = error.config
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true
+      const session = await getSession()
+
+      if (session) {
+        try {
+          const response = await axios.get<{ accessToken: string; refreshToken: string }>(
+            `${process.env.NEXT_PUBLIC_BACKEND_BASEURL}/auth/refresh`,
+            {
+              headers: {
+                Authorization: `Bearer ${session?.user?.refreshToken}`,
+              },
+            }
+          )
+          const { accessToken, refreshToken } = response.data
+          // this route triggers jwt callback with trigger="update"
+          await axios.post(`${process.env.NEXT_PUBLIC_HOST_URL}/api/auth/session`, {
+            csrfToken: await getCsrfToken(),
+            data: { refreshToken, accessToken },
+          })
+          setAccessToken(accessToken)
+          originalRequest.headers.Authorization = `Bearer ${accessToken}`
+          return axios(originalRequest)
+        } catch (e) {}
       }
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('accessToken', apiResponse.data.accessToken)
-        localStorage.setItem('refreshToken', apiResponse.data.refreshToken)
-      }
-      error.config.headers['Authorization'] = `Bearer ${apiResponse?.data?.accessToken}`
-      if (typeof window === 'undefined') {
-        error.config.headers['server-side-access'] = apiResponse.data.accessToken
-      }
-      return axios(error.config)
     } else return Promise.reject(error)
   }
 )

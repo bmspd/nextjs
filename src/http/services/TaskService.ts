@@ -2,7 +2,7 @@ import { TASK_PRIORITIES, TASK_STATUSES } from '@/constants/tasks.constants'
 import { AxiosResponse } from 'axios'
 import $api from '..'
 import { IProject } from './ProjectsService'
-import { DataWithPagination } from '@/types/pagination'
+import { DataWithPagination, PaginationParams } from '@/types/pagination'
 export type IUser = {
   id: number
   username: string
@@ -29,6 +29,7 @@ export type ICreateTaskForm = Pick<ITask, 'title' | 'description' | 'status' | '
     id?: number
   } | null
 }
+export type GetTasksParams = { status?: string } & PaginationParams
 export type ITaskWithPagination = DataWithPagination<ITask>
 export default class TasksService {
   static async getAllTasksByProject(projectId: number): Promise<AxiosResponse> {

@@ -54,6 +54,7 @@ const Content: React.FC<{ formId: string | undefined; handleClose: () => void }>
           })
         )
       })
+
     handleClose()
   }
   return (

@@ -10,6 +10,7 @@ import ProjectsService, {
   UpdateProjectBody,
 } from '@/http/services/ProjectsService'
 import TasksService, {
+  GetTasksParams,
   ICreateTaskBody,
   ITaskWithPagination,
   IUpdateTaskBody,
@@ -60,7 +61,7 @@ export const getProjectLogo = createAsyncThunk(
 )
 export const getTasksByProject = createAsyncThunk(
   'projects/getTasksByProject',
-  tryCatch<{ projectId: IdType; params: PaginationParams }, ITaskWithPagination>(async (data) => {
+  tryCatch<{ projectId: IdType; params: GetTasksParams }, ITaskWithPagination>(async (data) => {
     const response = await ProjectsService.getTasksByProject(data.projectId, data.params)
     return response.data
   })

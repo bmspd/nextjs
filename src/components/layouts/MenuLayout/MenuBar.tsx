@@ -30,6 +30,10 @@ const getMenuItems = (pathname: string) => [
     href: '/projects',
   },
   {
+    title: 'Test server req',
+    href: '/test-server-req',
+  },
+  {
     title: 'Notes',
     iconComponent: (
       <PushPinRoundedIcon

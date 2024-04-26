@@ -2,7 +2,7 @@ import { AxiosResponse } from 'axios'
 import $api from '..'
 import { DataWithPagination, PaginationParams } from '@/types/pagination'
 import { PROJECT_PATTERN_COLORS, PROJECT_PATTERN_TYPES } from '@/constants/projects.constants'
-import { IUser } from './TaskService'
+import { GetTasksParams, IUser } from './TaskService'
 import { IdType } from '@/types/common'
 
 export interface IUserInProject {
@@ -57,7 +57,7 @@ export default class ProjectsService {
   }
   static async getTasksByProject(
     projectId: IdType,
-    params: PaginationParams
+    params: GetTasksParams
   ): Promise<AxiosResponse> {
     return $api.get<AxiosResponse>(`/projects/${projectId}/tasks`, { params: params })
   }

@@ -1,6 +1,7 @@
 'use client'
 import { Clear } from '@mui/icons-material'
 import {
+  Checkbox,
   FormControl,
   IconButton,
   InputAdornment,
@@ -16,6 +17,7 @@ export interface ISelectProps extends Omit<SelectProps, 'label' | 'labelId'> {
   placeholder?: string
   options: DropDownOption[]
   isClearable?: boolean
+  uncontrolled?: boolean
 }
 export interface DropDownOption {
   value: string | number
@@ -23,7 +25,7 @@ export interface DropDownOption {
 }
 // TODO: insert error notification inside this component
 const Select = React.forwardRef<HTMLDivElement, ISelectProps>((props, ref) => {
-  const { placeholder, options, value, isClearable, ...rest } = props
+  const { placeholder, options, value, isClearable, uncontrolled, ...rest } = props
   const labelId = useId()
   const ClearIcon: React.FC = () => (
     <InputAdornment sx={{ mr: 2 }} position="end">
@@ -31,7 +33,9 @@ const Select = React.forwardRef<HTMLDivElement, ISelectProps>((props, ref) => {
         onClick={() => {
           if (rest?.onChange)
             rest.onChange(
-              { target: { value: null, name: rest?.name ?? '' } } as SelectChangeEvent<unknown>,
+              {
+                target: { value: props.multiple ? [] : null, name: rest?.name ?? '' },
+              } as SelectChangeEvent<unknown>,
               null
             )
         }}
@@ -40,17 +44,19 @@ const Select = React.forwardRef<HTMLDivElement, ISelectProps>((props, ref) => {
       </IconButton>
     </InputAdornment>
   )
+  const isNotEmptyValue = props.multiple ? !!(value as Array<string>)?.length : !!value
   return (
     <FormControl ref={ref} fullWidth>
       <InputLabel id={labelId}>{placeholder}</InputLabel>
       <MuiSelect
         inputProps={{ onClick: (e) => e.stopPropagation() }}
         labelId={labelId}
-        endAdornment={isClearable && value ? <ClearIcon /> : undefined}
+        endAdornment={isClearable && isNotEmptyValue ? <ClearIcon /> : undefined}
         onClick={(e) => e.stopPropagation()}
         label={placeholder}
         {...rest}
-        value={value ?? ''}
+        renderValue={props.multiple ? (seleted) => (seleted as string[]).join(', ') : undefined}
+        value={uncontrolled ? undefined : value ?? ''}
       >
         {options.map((option, index) => (
           <MenuItem
@@ -58,6 +64,9 @@ const Select = React.forwardRef<HTMLDivElement, ISelectProps>((props, ref) => {
             value={option.value}
             onClick={(e) => e.stopPropagation()}
           >
+            {props.multiple && (
+              <Checkbox checked={(value as (string | number)[]).indexOf(option.value) > -1} />
+            )}
             {option.label}
           </MenuItem>
         ))}

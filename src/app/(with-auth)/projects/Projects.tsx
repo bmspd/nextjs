@@ -14,6 +14,7 @@ import { getProjectLogo } from '@/store/reducers/ProjectsSlice/asyncThunks'
 import ProjectsViewControls from './ProjectsViewControls'
 import { selectProjectsView } from '@/store/reducers/InterfaceSlice/selectors'
 import { TProjectsViewVariants } from '@/store/reducers/InterfaceSlice/InterfaceSlice'
+
 const formProjectStyles = (view: TProjectsViewVariants): React.CSSProperties => {
   if (view === 'col') {
     return { display: 'flex', flexDirection: 'column' }
